@@ -10,6 +10,7 @@ Statuses: proposed, user-confirmed, verified, pending, completed, superseded. A 
 
 | ID | Date | Category | Status | Fact / decision | Source | Next action |
 |---|---|---|---|---|---|---|
+| MAINT-20261118-001 | 2026-11-18 | Repository hygiene | pending | Add missing .gitignore and PR lint/build workflow; remove unused selectedOrder state and use an ESM-compatible Vite alias. Add docs/MODULE_MAP.md. Preserve static sample business data and UI behavior. | GitHub maintenance request; .gitignore. | Verify PR checks and merge; this change does not verify deployment or change runtime data. |
 
 ## Current work
 
