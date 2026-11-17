@@ -103,5 +103,6 @@ Project-specific rules live in the "Project rules" section of each repo's AGENTS
 - Purpose: Dealer platform: brand product catalog, dealer lookup, customer lead management (Malaysia). This repo is public.
 - Base branch: `main`.
 - Read first: `README.md`, `PROJECT_README.md`, `DEPLOYMENT_GUIDE.md`.
+- Module map: `docs/MODULE_MAP.md`.
 - Checks before a PR: `pnpm lint`, `pnpm build`.
 - Branches: one branch (`main`). Agents merge their own PRs when checks pass; merging into `main` deploys production on Vercel.

@@ -382,7 +382,6 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedDealer, setSelectedDealer] = useState(null)
-  const [selectedOrder, setSelectedOrder] = useState(null)
   const [language, setLanguage] = useState('zh')
   const [showInquiryForm, setShowInquiryForm] = useState(false)
   const [inquirySuccess, setInquirySuccess] = useState(false)
