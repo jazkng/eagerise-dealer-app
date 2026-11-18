@@ -500,6 +500,7 @@ function App() {
       price: null,
       stock: null,
       image: '📺',
+      model: 'T133',
       images: ['/products/excedio/excedio-t133.webp'],
       features: language === 'zh'
         ? ['12.3 寸宽屏', '安卓系统', '分屏显示', 'DSP 音效', 'CarPlay / Android Auto']
@@ -516,6 +517,7 @@ function App() {
       price: null,
       stock: null,
       image: '📺',
+      model: 'T9',
       images: ['/products/excedio/excedio-t9-vision-series.webp'],
       features: language === 'zh'
         ? ['9 / 10 寸', '4GB RAM + 64GB 储存', '内置 4G', '支持 360° 摄像头']
@@ -532,6 +534,7 @@ function App() {
       price: null,
       stock: null,
       image: '📺',
+      model: 'T100',
       images: ['/products/excedio/excedio-t100-core-series.webp'],
       features: language === 'zh'
         ? ['9 / 10 寸', '2GB RAM + 64GB 储存', '安卓多媒体', '高性价比']
@@ -548,6 +551,7 @@ function App() {
       price: null,
       stock: null,
       image: '📷',
+      model: '360°',
       images: ['/products/excedio/excedio-360-camera-system.webp'],
       features: language === 'zh'
         ? ['360° 环视', '多画面显示', '前 / 后 / 左右视角', '泊车辅助']
@@ -564,6 +568,7 @@ function App() {
       price: null,
       stock: null,
       image: '📷',
+      model: '6-Way 360°',
       images: ['/products/excedio/excedio-6-way-360-camera-system.webp'],
       features: language === 'zh'
         ? ['6 路环视', '盲区 / 变道监控', '泊车辅助', 'Full HD 1080P']
@@ -1419,7 +1424,7 @@ function App() {
                     return (
                       <Card key={product.id} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
-                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-gray-900" />
+                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-[#2A2E33]" />
                           <Badge className="mb-2 bg-green-100 text-green-700 border-green-200">
                             {product.brand}
                           </Badge>
@@ -1715,7 +1720,7 @@ function App() {
                     return (
                       <Card key={product.id} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
-                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-gray-900" />
+                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-[#2A2E33]" />
                           <div className="flex items-center justify-between mb-2">
                             <Badge className="bg-green-100 text-green-700 border-green-200">
                               {product.brand}
@@ -2077,7 +2082,7 @@ function App() {
       )}
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white mt-16">
+      <footer className="bg-[#2A2E33] text-white mt-16">
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
