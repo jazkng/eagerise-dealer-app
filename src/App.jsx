@@ -844,84 +844,70 @@ function App() {
   return (
     <div className={`min-h-screen ${systemMode === 'customer' ? '' : 'bg-gradient-to-br from-gray-50 to-gray-100'}`} style={systemMode === 'customer' ? { background: showroom.floor } : undefined}>
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
-                  EAGERISE
-                </h1>
-                <p className="text-xs text-gray-500">{t.slogan}</p>
-              </div>
-            </div>
-            
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-4">
+      <header className="sticky top-0 z-50 backdrop-blur" style={{ background: 'rgba(243,244,242,.94)', borderBottom: `1px solid ${showroom.rule}`, color: showroom.ink }}>
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between min-h-[64px]">
+            <button onClick={() => setActiveTab('home')} className="flex items-center gap-2 min-h-[44px] rounded focus-visible:outline focus-visible:outline-2">
+              <span className="w-8 h-8 rounded flex items-center justify-center" style={{ background: showroom.go }}>
+                <Zap className="w-5 h-5 text-white" />
+              </span>
+              <span className="text-[28px] font-bold leading-none tracking-wide" style={displayFont}>EAGERISE</span>
+            </button>
+
+            {/* Desktop Navigation: current page marked by an underline, like a selected gear */}
+            <nav className="hidden md:flex gap-6">
               {navigation.map((item) => (
-                <button 
+                <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
-                    activeTab === item.id ? 'bg-green-50 text-green-600' : 'text-gray-600 hover:bg-gray-50'
-                  }`}
+                  aria-current={activeTab === item.id ? 'page' : undefined}
+                  className="min-h-[64px] px-1 text-[15px] focus-visible:outline focus-visible:outline-2"
+                  style={{
+                    color: activeTab === item.id ? showroom.ink : showroom.muted,
+                    boxShadow: activeTab === item.id ? `inset 0 -2px 0 ${showroom.ink}` : 'none',
+                    fontWeight: activeTab === item.id ? 600 : 400,
+                  }}
                 >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
+                  {item.label}
                 </button>
               ))}
             </nav>
 
-            <div className="flex items-center space-x-3">
-              {/* Mode Switcher */}
-              <div className="hidden md:flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
-                <button
-                  onClick={() => switchMode('customer')}
-                  className={`px-3 py-1 rounded text-sm transition-all ${
-                    systemMode === 'customer' ? 'bg-white shadow-sm' : 'text-gray-600'
-                  }`}
-                >
-                  <Users className="w-4 h-4 inline mr-1" />
-                  {language === 'zh' ? '客户' : 'Customer'}
-                </button>
-                <button
-                  onClick={() => switchMode('dealer')}
-                  className={`px-3 py-1 rounded text-sm transition-all ${
-                    systemMode === 'dealer' ? 'bg-white shadow-sm' : 'text-gray-600'
-                  }`}
-                >
-                  <Store className="w-4 h-4 inline mr-1" />
-                  {language === 'zh' ? '经销商' : 'Dealer'}
-                </button>
-                <button
-                  onClick={() => switchMode('admin')}
-                  className={`px-3 py-1 rounded text-sm transition-all ${
-                    systemMode === 'admin' ? 'bg-white shadow-sm' : 'text-gray-600'
-                  }`}
-                >
-                  <Shield className="w-4 h-4 inline mr-1" />
-                  {language === 'zh' ? '管理员' : 'Admin'}
-                </button>
+            <div className="flex items-center gap-4">
+              {/* Mode Switcher (demo: customer / dealer / admin views) */}
+              <div className="hidden md:flex items-center text-sm rounded-md overflow-hidden" style={{ border: `1px solid ${showroom.rule}` }}>
+                {[
+                  ['customer', language === 'zh' ? '客户' : 'Customer'],
+                  ['dealer', language === 'zh' ? '经销商' : 'Dealer'],
+                  ['admin', language === 'zh' ? '管理员' : 'Admin'],
+                ].map(([mode, label]) => (
+                  <button
+                    key={mode}
+                    onClick={() => switchMode(mode)}
+                    className="px-3 min-h-[36px] focus-visible:outline focus-visible:outline-2"
+                    style={systemMode === mode ? { background: showroom.ink, color: '#fff' } : { color: showroom.muted }}
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
 
-              {/* Language Toggle */}
-              <Button 
-                variant="outline" 
-                size="sm"
+              {/* Language Toggle: shows the language you will switch to */}
+              <button
                 onClick={toggleLanguage}
-                className="hidden md:flex items-center space-x-2"
+                className="hidden md:flex items-center gap-1 min-h-[44px] text-sm focus-visible:outline focus-visible:outline-2"
+                style={{ color: showroom.muted }}
               >
                 <Globe className="w-4 h-4" />
-                <span>{language === 'zh' ? '中文' : 'EN'}</span>
-              </Button>
+                {language === 'zh' ? 'English' : '中文'}
+              </button>
 
               {/* Mobile Menu Button */}
-              <button 
-                className="md:hidden"
+              <button
+                className="md:hidden w-11 h-11 flex items-center justify-center -mr-2"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={mobileMenuOpen ? t.close : 'Menu'}
+                aria-expanded={mobileMenuOpen}
               >
                 {mobileMenuOpen ? <X /> : <Menu />}
               </button>
@@ -930,44 +916,41 @@ function App() {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <nav className="md:hidden mt-4 pb-4 space-y-2">
+            <nav className="md:hidden pb-4">
               {navigation.map((item) => (
-                <button 
+                <button
                   key={item.id}
                   onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false); }}
-                  className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+                  className="w-full text-left min-h-[52px] text-2xl font-semibold"
+                  style={{ ...displayFont, borderBottom: `1px solid ${showroom.rule}`, color: activeTab === item.id ? showroom.ink : showroom.muted }}
                 >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
+                  {item.label}
                 </button>
               ))}
-              <div className="border-t pt-2 mt-2">
-                <button 
-                  onClick={() => switchMode('customer')}
-                  className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50"
+              <div className="flex flex-wrap gap-2 pt-4">
+                {[
+                  ['customer', t.customerPortal],
+                  ['dealer', t.dealerPortal],
+                  ['admin', t.adminPortal],
+                ].map(([mode, label]) => (
+                  <button
+                    key={mode}
+                    onClick={() => { switchMode(mode); setMobileMenuOpen(false); }}
+                    className="px-3 min-h-[44px] rounded-md text-sm"
+                    style={systemMode === mode ? { background: showroom.ink, color: '#fff' } : { border: `1px solid ${showroom.rule}`, color: showroom.muted }}
+                  >
+                    {label}
+                  </button>
+                ))}
+                <button
+                  onClick={toggleLanguage}
+                  className="px-3 min-h-[44px] rounded-md text-sm flex items-center gap-1"
+                  style={{ border: `1px solid ${showroom.rule}`, color: showroom.muted }}
                 >
-                  {t.customerPortal}
-                </button>
-                <button 
-                  onClick={() => switchMode('dealer')}
-                  className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50"
-                >
-                  {t.dealerPortal}
-                </button>
-                <button 
-                  onClick={() => switchMode('admin')}
-                  className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50"
-                >
-                  {t.adminPortal}
+                  <Globe className="w-4 h-4" />
+                  {language === 'zh' ? 'English' : '中文'}
                 </button>
               </div>
-              <button 
-                onClick={toggleLanguage}
-                className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
-              >
-                <Globe className="w-4 h-4" />
-                <span>{language === 'zh' ? 'English' : '中文'}</span>
-              </button>
             </nav>
           )}
         </div>
@@ -1083,80 +1066,76 @@ function App() {
 
             {/* Dealers Tab */}
             {activeTab === 'dealers' && (
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-3xl font-bold mb-2">{t.findDealerTitle}</h2>
-                  <p className="text-gray-600">{t.findDealerDesc}</p>
+              <div style={{ color: showroom.ink }}>
+                <div className="grid md:grid-cols-[1fr_minmax(280px,380px)] gap-6 items-end pb-6" style={{ borderBottom: `1px solid ${showroom.ink}` }}>
+                  <div>
+                    <h2 className="text-5xl font-bold leading-none" style={displayFont}>{t.findDealerTitle}</h2>
+                    <p className="mt-2" style={{ color: showroom.muted }}>{t.findDealerDesc}</p>
+                  </div>
+                  <label className="relative block">
+                    <span className="sr-only">{t.dealerLocator}</span>
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: showroom.muted }} />
+                    <Input
+                      placeholder={t.enterLocation}
+                      className="pl-10 h-12 text-base bg-white"
+                      value={dealerSearchQuery}
+                      onChange={(e) => setDealerSearchQuery(e.target.value)}
+                    />
+                  </label>
                 </div>
 
-                <Card className="bg-gradient-to-r from-green-50 to-blue-50">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-3 mb-4">
-                      <MapPin className="w-6 h-6 text-green-600" />
-                      <h3 className="text-xl font-bold">{t.dealerLocator}</h3>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Input 
-                        placeholder={t.enterLocation}
-                        value={dealerSearchQuery}
-                        onChange={(e) => setDealerSearchQuery(e.target.value)}
-                      />
-                      <Button className="bg-gradient-to-r from-green-600 to-green-500">
-                        <Search className="w-4 h-4 mr-2" />
-                        {t.searchDealers}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {filteredDealers.map((dealer) => (
-                    <Card key={dealer.id} className="hover:shadow-lg transition-shadow">
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <CardTitle className="flex items-center gap-2">
-                              {dealer.name}
-                              {dealer.verified && (
-                                <Badge className="bg-green-100 text-green-700 border-green-200">
-                                  ✓ {t.verified}
-                                </Badge>
-                              )}
-                            </CardTitle>
-                            <CardDescription className="flex items-center mt-2">
-                              <MapPin className="w-4 h-4 mr-1" />
-                              {dealer.city}
-                            </CardDescription>
-                          </div>
-                          <Store className="w-8 h-8 text-green-600" />
+                {filteredDealers.length === 0 ? (
+                  <p className="py-10" style={{ color: showroom.muted }}>
+                    {language === 'zh' ? '这个地区暂时没有经销商，试试附近的城市，或清空搜索查看全部。' : 'No dealers in this area yet. Try a nearby city, or clear the search to see all.'}
+                  </p>
+                ) : (
+                  <ul>
+                    {filteredDealers.map((dealer) => (
+                      <li key={dealer.id} className="grid md:grid-cols-[180px_1fr_auto] gap-x-8 gap-y-3 py-6" style={{ borderBottom: `1px solid ${showroom.rule}` }}>
+                        <p className="text-3xl font-bold leading-none" style={displayFont}>{dealer.city}</p>
+                        <div>
+                          <h3 className="text-lg font-semibold flex items-center gap-2 flex-wrap">
+                            {dealer.name}
+                            {dealer.verified && (
+                              <span className="inline-flex items-center gap-1 text-sm font-normal" style={{ color: showroom.go }}>
+                                <Shield className="w-4 h-4" />
+                                {t.verified}
+                              </span>
+                            )}
+                          </h3>
+                          {dealer.address && <p className="mt-1" style={{ color: showroom.muted }}>{dealer.address}</p>}
+                          <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[15px]">
+                            <a href={`tel:${dealer.phone.replace(/\s/g, '')}`} className="inline-flex items-center gap-1 min-h-[44px] md:min-h-0 underline underline-offset-4">
+                              <Phone className="w-4 h-4" />{dealer.phone}
+                            </a>
+                            <a href={`mailto:${dealer.email}`} className="inline-flex items-center gap-1 min-h-[44px] md:min-h-0 underline underline-offset-4">
+                              <Mail className="w-4 h-4" />{dealer.email}
+                            </a>
+                          </p>
                         </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          <div className="flex items-center text-gray-600">
-                            <Phone className="w-4 h-4 mr-2" />
-                            <span>{dealer.phone}</span>
-                          </div>
-                          <div className="flex items-center text-gray-600">
-                            <Mail className="w-4 h-4 mr-2" />
-                            <span className="text-sm">{dealer.email}</span>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button 
-                              className="flex-1 bg-gradient-to-r from-green-600 to-green-500"
-                              onClick={() => handleContactDealer(dealer)}
-                            >
-                              {t.contactDealer}
-                            </Button>
-                            <Button variant="outline" className="flex-1">
-                              {t.viewMap}
-                            </Button>
-                          </div>
+                        <div className="flex md:flex-col gap-2 md:w-44">
+                          <button
+                            onClick={() => handleContactDealer(dealer)}
+                            className="flex-1 min-h-[44px] px-4 rounded-md text-white font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                            style={{ background: showroom.go, outlineColor: showroom.go }}
+                          >
+                            {t.contactDealer}
+                          </button>
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${dealer.name} ${dealer.address ?? dealer.city}`)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex-1 min-h-[44px] px-4 rounded-md font-medium flex items-center justify-center gap-1"
+                            style={{ border: `1px solid ${showroom.ink}` }}
+                          >
+                            <MapPin className="w-4 h-4" />
+                            {t.viewMap}
+                          </a>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
           </>
@@ -2015,57 +1994,64 @@ function App() {
       )}
 
       {/* Footer */}
-      <footer className="bg-[#2A2E33] text-white mt-16">
+      <footer className="mt-20" style={{ background: showroom.stage, color: '#E6E8EA' }}>
         <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-xl font-bold">EAGERISE</h3>
-              </div>
-              <p className="text-gray-400 text-sm">
-                {t.slogan}
-              </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="col-span-2 md:col-span-1">
+              <p className="text-3xl font-bold" style={displayFont}>EAGERISE</p>
+              <p className="mt-1 text-sm" style={{ color: '#9AA1A8' }}>{t.slogan}</p>
             </div>
 
             <div>
-              <h4 className="font-bold mb-4">{t.products}</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-green-400 transition-colors">Aurora Series</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">Clif Designs</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">{t.accessories}</a></li>
+              <h4 className="font-semibold mb-3">{t.products}</h4>
+              <ul className="space-y-1 text-sm" style={{ color: '#B5BBC1' }}>
+                {['EXCEDIO', 'Aurora', 'Clif Designs'].map((brand) => (
+                  <li key={brand}>
+                    <button
+                      onClick={() => { switchMode('customer'); setActiveTab('products'); setSearchQuery(brand); window.scrollTo(0, 0) }}
+                      className="min-h-[36px] hover:underline underline-offset-4"
+                    >
+                      {brand}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold mb-4">{t.support}</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-green-400 transition-colors">{t.findDealer}</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">{t.warranty}</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">{t.contactUs}</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold mb-4">{t.contact}</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li className="flex items-center">
-                  <Mail className="w-4 h-4 mr-2" />
-                  info@eagerise.com
+              <h4 className="font-semibold mb-3">{t.support}</h4>
+              <ul className="space-y-1 text-sm" style={{ color: '#B5BBC1' }}>
+                <li>
+                  <button onClick={() => { switchMode('customer'); setActiveTab('dealers'); window.scrollTo(0, 0) }} className="min-h-[36px] hover:underline underline-offset-4">
+                    {t.findDealer}
+                  </button>
                 </li>
-                <li className="flex items-center">
-                  <Phone className="w-4 h-4 mr-2" />
-                  +60 3-1234 5678
+                <li>
+                  <a href="mailto:info@eagerise.com" className="inline-flex items-center min-h-[36px] hover:underline underline-offset-4">{t.contactUs}</a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="col-span-2 md:col-span-1">
+              <h4 className="font-semibold mb-3">{t.contact}</h4>
+              <ul className="space-y-1 text-sm" style={{ color: '#B5BBC1' }}>
+                <li>
+                  <a href="mailto:info@eagerise.com" className="inline-flex items-center gap-2 min-h-[36px] hover:underline underline-offset-4">
+                    <Mail className="w-4 h-4" />info@eagerise.com
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+60312345678" className="inline-flex items-center gap-2 min-h-[36px] hover:underline underline-offset-4">
+                    <Phone className="w-4 h-4" />+60 3-1234 5678
+                  </a>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-            <p>{t.copyright}</p>
-          </div>
+          <p className="mt-10 pt-6 text-sm" style={{ borderTop: '1px solid #41474D', color: '#9AA1A8', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+            {t.copyright}
+          </p>
         </div>
       </footer>
     </div>
