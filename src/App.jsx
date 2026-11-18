@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.j
 import { Badge } from '@/components/ui/badge.jsx'
 import ProductDetailPage from '@/components/ProductDetailPage.jsx'
 import ProductThumb from '@/components/ProductThumb.jsx'
+import ShowroomProductCard from '@/components/ShowroomProductCard.jsx'
+import { showroom, displayFont } from '@/lib/showroom.js'
 import { 
   Home, 
   Store, 
@@ -74,7 +76,7 @@ const translations = {
     
     // Home Page
     heroTitle: 'Premium Car Audio Solutions',
-    heroDescription: 'Discover our ecosystem of Aurora and Clif Designs products. Connect with verified dealers nationwide for the ultimate audio experience.',
+    heroDescription: 'Discover EXCEDIO, Aurora and Clif Designs products. Connect with verified dealers nationwide for the ultimate audio experience.',
     exploreProducts: 'Explore Products',
     findDealer: 'Find a Dealer',
     totalProducts: 'Total Products',
@@ -236,7 +238,7 @@ const translations = {
     
     // Home Page
     heroTitle: '高端汽车音响解决方案',
-    heroDescription: '探索我们的Aurora和Clif Designs产品生态系统。与全国认证经销商联系，获得极致音频体验。',
+    heroDescription: '探索 EXCEDIO、Aurora 和 Clif Designs 产品。与全国认证经销商联系，获得极致音频体验。',
     exploreProducts: '浏览产品',
     findDealer: '查找经销商',
     totalProducts: '产品总数',
@@ -500,6 +502,7 @@ function App() {
       price: null,
       stock: null,
       image: '📺',
+      model: 'T133',
       images: ['/products/excedio/excedio-t133.webp'],
       features: language === 'zh'
         ? ['12.3 寸宽屏', '安卓系统', '分屏显示', 'DSP 音效', 'CarPlay / Android Auto']
@@ -516,6 +519,7 @@ function App() {
       price: null,
       stock: null,
       image: '📺',
+      model: 'T9',
       images: ['/products/excedio/excedio-t9-vision-series.webp'],
       features: language === 'zh'
         ? ['9 / 10 寸', '4GB RAM + 64GB 储存', '内置 4G', '支持 360° 摄像头']
@@ -532,6 +536,7 @@ function App() {
       price: null,
       stock: null,
       image: '📺',
+      model: 'T100',
       images: ['/products/excedio/excedio-t100-core-series.webp'],
       features: language === 'zh'
         ? ['9 / 10 寸', '2GB RAM + 64GB 储存', '安卓多媒体', '高性价比']
@@ -548,6 +553,7 @@ function App() {
       price: null,
       stock: null,
       image: '📷',
+      model: '360°',
       images: ['/products/excedio/excedio-360-camera-system.webp'],
       features: language === 'zh'
         ? ['360° 环视', '多画面显示', '前 / 后 / 左右视角', '泊车辅助']
@@ -564,6 +570,7 @@ function App() {
       price: null,
       stock: null,
       image: '📷',
+      model: '6-Way 360°',
       images: ['/products/excedio/excedio-6-way-360-camera-system.webp'],
       features: language === 'zh'
         ? ['6 路环视', '盲区 / 变道监控', '泊车辅助', 'Full HD 1080P']
@@ -830,8 +837,12 @@ function App() {
     return colors[status] || 'bg-gray-100 text-gray-700'
   }
 
+  // Customer pages use the showroom look; dealer/admin portals keep their original styling.
+  const heroProduct = products.find((p) => p.images?.length)
+  const featuredProducts = [...products].sort((a, b) => (b.images?.length ? 1 : 0) - (a.images?.length ? 1 : 0)).slice(0, 4)
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className={`min-h-screen ${systemMode === 'customer' ? '' : 'bg-gradient-to-br from-gray-50 to-gray-100'}`} style={systemMode === 'customer' ? { background: showroom.floor } : undefined}>
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
@@ -969,105 +980,77 @@ function App() {
           <>
             {/* Home Tab */}
             {activeTab === 'home' && (
-              <div className="space-y-8">
-                {/* Hero Section */}
-                <div className="bg-gradient-to-r from-green-600 to-green-500 rounded-2xl p-8 md:p-12 text-white shadow-xl">
-                  <div className="max-w-3xl">
-                    <Badge className="mb-4 bg-white/20 text-white border-white/30">
-                      Connected by Eagerise
-                    </Badge>
-                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              <div className="space-y-14" style={{ color: showroom.ink }}>
+                {/* Hero: lead with the product on its plinth, the thing customers come to see */}
+                <section className="grid md:grid-cols-[1fr_1.1fr] gap-8 md:gap-12 items-center pt-2">
+                  <div>
+                    <h2 className="font-bold leading-[0.9] tracking-tight" style={{ ...displayFont, fontSize: 'clamp(3rem, 8vw, 5.5rem)' }}>
                       {t.heroTitle}
                     </h2>
-                    <p className="text-lg md:text-xl mb-6 text-green-50">
+                    <p className="mt-5 text-lg leading-relaxed max-w-[52ch]" style={{ color: showroom.muted }}>
                       {t.heroDescription}
                     </p>
-                    <div className="flex flex-wrap gap-4">
-                      <Button 
-                        size="lg" 
-                        className="bg-white text-green-600 hover:bg-green-50"
+                    <div className="mt-8 flex flex-wrap gap-3">
+                      <button
                         onClick={() => setActiveTab('products')}
+                        className="min-h-[48px] px-6 rounded-md text-white font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        style={{ background: showroom.go, outlineColor: showroom.go }}
                       >
                         {t.exploreProducts}
-                        <ChevronRight className="ml-2 w-4 h-4" />
-                      </Button>
-                      <Button 
-                        size="lg" 
-                        variant="outline" 
-                        className="border-white text-white hover:bg-white/10"
+                      </button>
+                      <button
                         onClick={() => setActiveTab('dealers')}
+                        className="min-h-[48px] px-6 rounded-md font-medium flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        style={{ border: `1px solid ${showroom.ink}`, color: showroom.ink, outlineColor: showroom.ink }}
                       >
+                        <MapPin className="w-4 h-4" />
                         {t.findDealer}
-                        <MapPin className="ml-2 w-4 h-4" />
-                      </Button>
+                      </button>
                     </div>
                   </div>
-                </div>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {stats.customer.map((stat, index) => (
-                    <Card key={index} className="hover:shadow-lg transition-shadow">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm text-gray-500 mb-1">{stat.label}</p>
-                            <p className="text-3xl font-bold">{stat.value}</p>
-                          </div>
-                          <stat.icon className={`w-12 h-12 ${stat.color}`} />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                  {heroProduct && (
+                    <button
+                      onClick={() => handleProductDetails(heroProduct)}
+                      className="block rounded-lg overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+                      style={{ background: showroom.stage, outlineColor: showroom.ink }}
+                      aria-label={heroProduct.name}
+                    >
+                      <img src={heroProduct.images[0]} alt={heroProduct.name} className="w-full aspect-square object-contain" />
+                    </button>
+                  )}
+                </section>
 
                 {/* Featured Products */}
-                <div>
-                  <h3 className="text-2xl font-bold mb-6">{t.featuredProducts}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {products.slice(0, 4).map((product) => (
-                      <Card key={product.id} className="hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer">
-                        <CardContent className="p-6">
-                          <ProductThumb product={product} emojiClass="text-6xl mb-4 text-center" />
-                          <Badge className="mb-2 bg-green-100 text-green-700 border-green-200">
-                            {product.brand}
-                          </Badge>
-                          <h4 className="font-bold mb-2">{product.name}</h4>
-                          <div className="flex items-center mb-3">
-                            {product.rating && <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />}
-                            <span className="text-sm font-semibold">{product.rating}</span>
-                          </div>
-                          <p className="text-2xl font-bold text-green-600 mb-4">
-                            {product.price != null ? `RM ${product.price.toLocaleString()}` : (language === 'zh' ? '价格请询问' : 'Price on request')}
-                          </p>
-                          <Button 
-                            className="w-full bg-gradient-to-r from-green-600 to-green-500"
-                            onClick={() => handleProductDetails(product)}
-                          >
-                            {t.viewDetails}
-                          </Button>
-                        </CardContent>
-                      </Card>
+                <section>
+                  <div className="flex items-baseline justify-between gap-4 mb-6 pb-3" style={{ borderBottom: `1px solid ${showroom.rule}` }}>
+                    <h3 className="text-3xl font-semibold" style={displayFont}>{t.featuredProducts}</h3>
+                    <button onClick={() => setActiveTab('products')} className="min-h-[44px] underline underline-offset-4" style={{ color: showroom.ink }}>
+                      {t.exploreProducts}
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6">
+                    {featuredProducts.map((product) => (
+                      <ShowroomProductCard key={product.id} product={product} language={language} onOpen={handleProductDetails} />
                     ))}
                   </div>
-                </div>
+                </section>
 
-                {/* Brands Section */}
-                <div className="bg-white rounded-2xl p-8 shadow-lg">
-                  <h3 className="text-2xl font-bold mb-6 text-center">{t.ourBrands}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
-                      <Award className="w-16 h-16 mx-auto mb-4 text-green-600" />
-                      <h4 className="text-xl font-bold mb-2">Aurora</h4>
-                      <p className="text-gray-600">{t.auroraDesc}</p>
-                    </div>
-                    <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
-                      <Award className="w-16 h-16 mx-auto mb-4 text-blue-600" />
-                      <h4 className="text-xl font-bold mb-2">Clif Designs</h4>
-                      <p className="text-gray-600">{t.clifDesc}</p>
-                    </div>
-                  </div>
-                </div>
+                {/* Brands */}
+                <section>
+                  <h3 className="text-3xl font-semibold mb-6 pb-3" style={{ ...displayFont, borderBottom: `1px solid ${showroom.rule}` }}>{t.ourBrands}</h3>
+                  <dl className="grid md:grid-cols-3 gap-8">
+                    {[
+                      ['EXCEDIO', language === 'zh' ? '安卓车机与 360° 全景摄像系统' : 'Android head units and 360° camera systems'],
+                      ['Aurora', t.auroraDesc],
+                      ['Clif Designs', t.clifDesc],
+                    ].map(([name, desc]) => (
+                      <div key={name}>
+                        <dt className="text-2xl font-bold" style={displayFont}>{name}</dt>
+                        <dd className="mt-1" style={{ color: showroom.muted }}>{desc}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
               </div>
             )}
 
@@ -1076,68 +1059,23 @@ function App() {
               <div className="space-y-6">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div>
-                    <h2 className="text-3xl font-bold mb-2">{t.productCatalog}</h2>
-                    <p className="text-gray-600">{t.productCatalogDesc}</p>
+                    <h2 className="text-5xl font-bold leading-none" style={{ ...displayFont, color: showroom.ink }}>{t.productCatalog}</h2>
+                    <p className="mt-2" style={{ color: showroom.muted }}>{t.productCatalogDesc}</p>
                   </div>
                   <div className="relative w-full md:w-auto">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <Input 
                       placeholder={t.searchProducts}
-                      className="pl-10 w-full md:w-64"
+                      className="pl-10 w-full md:w-64 h-11 text-base bg-white"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8 md:gap-x-6">
                   {filteredProducts.map((product) => (
-                    <Card key={product.id} className="hover:shadow-xl transition-all">
-                      <CardHeader>
-                        <ProductThumb product={product} emojiClass="text-6xl mb-4 text-center" />
-                        <div className="flex items-center justify-between mb-2">
-                          <Badge className="bg-green-100 text-green-700 border-green-200">
-                            {product.brand}
-                          </Badge>
-                          <div className="flex items-center">
-                            {product.rating && <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />}
-                            <span className="text-sm font-semibold">{product.rating}</span>
-                          </div>
-                        </div>
-                        <CardTitle className="text-xl">{product.name}</CardTitle>
-                        <CardDescription>{product.category}</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          <div className="flex flex-wrap gap-2">
-                            {product.features.map((feature, idx) => (
-                              <Badge key={idx} variant="outline" className="text-xs">
-                                {feature}
-                              </Badge>
-                            ))}
-                          </div>
-                          <p className="text-3xl font-bold text-green-600">
-                            {product.price != null ? `RM ${product.price.toLocaleString()}` : (language === 'zh' ? '价格请询问' : 'Price on request')}
-                          </p>
-                          <div className="flex gap-2">
-                            <Button 
-                              className="flex-1 bg-gradient-to-r from-green-600 to-green-500"
-                              onClick={() => handleInquiry(product)}
-                            >
-                              <ShoppingCart className="w-4 h-4 mr-2" />
-                              {t.inquire}
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              className="flex-1"
-                              onClick={() => handleProductDetails(product)}
-                            >
-                              {t.details}
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <ShowroomProductCard key={product.id} product={product} language={language} onOpen={handleProductDetails} />
                   ))}
                 </div>
               </div>
@@ -1419,7 +1357,7 @@ function App() {
                     return (
                       <Card key={product.id} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
-                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-gray-900" />
+                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-[#2A2E33]" />
                           <Badge className="mb-2 bg-green-100 text-green-700 border-green-200">
                             {product.brand}
                           </Badge>
@@ -1715,7 +1653,7 @@ function App() {
                     return (
                       <Card key={product.id} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
-                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-gray-900" />
+                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-[#2A2E33]" />
                           <div className="flex items-center justify-between mb-2">
                             <Badge className="bg-green-100 text-green-700 border-green-200">
                               {product.brand}
@@ -2077,7 +2015,7 @@ function App() {
       )}
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white mt-16">
+      <footer className="bg-[#2A2E33] text-white mt-16">
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
