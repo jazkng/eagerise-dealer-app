@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea.jsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
 import ProductDetailPage from '@/components/ProductDetailPage.jsx'
+import ProductThumb from '@/components/ProductThumb.jsx'
 import { 
   Home, 
   Store, 
@@ -488,6 +489,88 @@ function App() {
       description: language === 'zh'
         ? '双驱动单元低音炮，2000W超强功率。低频增强技术，震撼音效。'
         : 'Dual-driver subwoofer with 2000W ultra-powerful output. Bass boost technology.'
+    },
+    // EXCEDIO products: images from the supplier's Google Drive posters. Price, stock and
+    // detailed specs are not provided yet, so the detail page shows "资料待补充" for those.
+    {
+      id: 7,
+      name: language === 'zh' ? 'EXCEDIO T133 12.3 寸安卓车载多媒体主机' : 'EXCEDIO T133 12.3" Android Car Multimedia Player',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '安卓车机' : 'Android Player',
+      price: null,
+      stock: null,
+      image: '📺',
+      images: ['/products/excedio/excedio-t133.webp'],
+      features: language === 'zh'
+        ? ['12.3 寸宽屏', '安卓系统', '分屏显示', 'DSP 音效', 'CarPlay / Android Auto']
+        : ['12.3" Widescreen', 'Android System', 'Split Screen', 'DSP Audio', 'CarPlay / Android Auto'],
+      description: language === 'zh'
+        ? '12.3 寸宽屏安卓车载多媒体主机，支持分屏、DSP 音效，内置 CarPlay、Android Auto、YouTube、Waze 等应用。'
+        : '12.3" widescreen Android car multimedia player with split screen and DSP audio. Supports CarPlay, Android Auto, YouTube, Waze and more.'
+    },
+    {
+      id: 8,
+      name: language === 'zh' ? 'EXCEDIO Vision 系列 T9 安卓车载多媒体主机' : 'EXCEDIO Vision Series T9 Android Car Multimedia Player',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '安卓车机' : 'Android Player',
+      price: null,
+      stock: null,
+      image: '📺',
+      images: ['/products/excedio/excedio-t9-vision-series.webp'],
+      features: language === 'zh'
+        ? ['9 / 10 寸', '4GB RAM + 64GB 储存', '内置 4G', '支持 360° 摄像头']
+        : ['9" / 10"', '4GB RAM + 64GB Storage', 'Built-in 4G', '360° Camera Support'],
+      description: language === 'zh'
+        ? '9 寸 / 10 寸安卓车载多媒体主机，4GB RAM + 64GB 储存，内置 4G 网络，支持 360° 摄像头。'
+        : '9" / 10" Android car multimedia player with 4GB RAM + 64GB storage, built-in 4G connectivity and 360° camera support.'
+    },
+    {
+      id: 9,
+      name: language === 'zh' ? 'EXCEDIO Core 系列 T100 安卓车载多媒体主机' : 'EXCEDIO Core Series T100 Android Car Multimedia Player',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '安卓车机' : 'Android Player',
+      price: null,
+      stock: null,
+      image: '📺',
+      images: ['/products/excedio/excedio-t100-core-series.webp'],
+      features: language === 'zh'
+        ? ['9 / 10 寸', '2GB RAM + 64GB 储存', '安卓多媒体', '高性价比']
+        : ['9" / 10"', '2GB RAM + 64GB Storage', 'Android Multimedia', 'Budget-Friendly'],
+      description: language === 'zh'
+        ? '高性价比 9 寸 / 10 寸安卓车载多媒体主机，2GB RAM + 64GB 储存，满足日常导航、音乐、视频需求。'
+        : 'Budget-friendly 9" / 10" Android car multimedia player with 2GB RAM + 64GB storage for everyday navigation, music and video.'
+    },
+    {
+      id: 10,
+      name: language === 'zh' ? 'EXCEDIO 360° 全景摄像系统' : 'EXCEDIO 360° Camera System',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '摄像系统' : 'Camera System',
+      price: null,
+      stock: null,
+      image: '📷',
+      images: ['/products/excedio/excedio-360-camera-system.webp'],
+      features: language === 'zh'
+        ? ['360° 环视', '多画面显示', '前 / 后 / 左右视角', '泊车辅助']
+        : ['360° Surround View', 'Multi-View Display', 'Front / Rear / Side Views', 'Parking Assistance'],
+      description: language === 'zh'
+        ? '360° 全景环视摄像系统，前、后、左右多角度画面，倒车与泊车更安心。'
+        : '360° surround-view camera system with front, rear and side views for safer, more confident parking.'
+    },
+    {
+      id: 11,
+      name: language === 'zh' ? 'EXCEDIO 6 路 360° 全景摄像系统' : 'EXCEDIO 6-Way 360° Panoramic Camera System',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '摄像系统' : 'Camera System',
+      price: null,
+      stock: null,
+      image: '📷',
+      images: ['/products/excedio/excedio-6-way-360-camera-system.webp'],
+      features: language === 'zh'
+        ? ['6 路环视', '盲区 / 变道监控', '泊车辅助', 'Full HD 1080P']
+        : ['6-Way Surround View', 'Lane Watch Monitoring', 'Parking Assistance', 'Full HD 1080P'],
+      description: language === 'zh'
+        ? '6 路 360° 全景摄像系统：前、后、左右及两侧后视镜区域，含变道盲区监控，1080P 全高清画质。'
+        : '6-way 360° panoramic camera system covering front, rear, both sides and side-mirror areas, with lane watch monitoring in Full HD 1080P.'
     }
   ]
 
@@ -729,6 +812,8 @@ function App() {
 
   // 获取库存状态
   const getStockStatus = (stock) => {
+    // 👑 New catalog items may not have stock data yet; don't mislabel them as low stock.
+    if (stock == null) return { label: '—', color: 'text-gray-500 bg-gray-100' }
     if (stock === 0) return { label: t.outOfStock, color: 'text-red-600 bg-red-100' }
     if (stock < 10) return { label: t.lowStock, color: 'text-orange-600 bg-orange-100' }
     return { label: t.inStock, color: 'text-green-600 bg-green-100' }
@@ -943,17 +1028,17 @@ function App() {
                     {products.slice(0, 4).map((product) => (
                       <Card key={product.id} className="hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer">
                         <CardContent className="p-6">
-                          <div className="text-6xl mb-4 text-center">{product.image}</div>
+                          <ProductThumb product={product} emojiClass="text-6xl mb-4 text-center" />
                           <Badge className="mb-2 bg-green-100 text-green-700 border-green-200">
                             {product.brand}
                           </Badge>
                           <h4 className="font-bold mb-2">{product.name}</h4>
                           <div className="flex items-center mb-3">
-                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                            {product.rating && <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />}
                             <span className="text-sm font-semibold">{product.rating}</span>
                           </div>
                           <p className="text-2xl font-bold text-green-600 mb-4">
-                            RM {product.price.toLocaleString()}
+                            {product.price != null ? `RM ${product.price.toLocaleString()}` : (language === 'zh' ? '价格请询问' : 'Price on request')}
                           </p>
                           <Button 
                             className="w-full bg-gradient-to-r from-green-600 to-green-500"
@@ -1009,13 +1094,13 @@ function App() {
                   {filteredProducts.map((product) => (
                     <Card key={product.id} className="hover:shadow-xl transition-all">
                       <CardHeader>
-                        <div className="text-6xl mb-4 text-center">{product.image}</div>
+                        <ProductThumb product={product} emojiClass="text-6xl mb-4 text-center" />
                         <div className="flex items-center justify-between mb-2">
                           <Badge className="bg-green-100 text-green-700 border-green-200">
                             {product.brand}
                           </Badge>
                           <div className="flex items-center">
-                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                            {product.rating && <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />}
                             <span className="text-sm font-semibold">{product.rating}</span>
                           </div>
                         </div>
@@ -1032,7 +1117,7 @@ function App() {
                             ))}
                           </div>
                           <p className="text-3xl font-bold text-green-600">
-                            RM {product.price.toLocaleString()}
+                            {product.price != null ? `RM ${product.price.toLocaleString()}` : (language === 'zh' ? '价格请询问' : 'Price on request')}
                           </p>
                           <div className="flex gap-2">
                             <Button 
@@ -1334,7 +1419,7 @@ function App() {
                     return (
                       <Card key={product.id} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
-                          <div className="text-5xl mb-3 text-center">{product.image}</div>
+                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-gray-900" />
                           <Badge className="mb-2 bg-green-100 text-green-700 border-green-200">
                             {product.brand}
                           </Badge>
@@ -1342,11 +1427,11 @@ function App() {
                           <div className="flex items-center justify-between mb-3">
                             <span className="text-sm text-gray-500">{t.inStock}</span>
                             <Badge className={stockStatus.color}>
-                              {product.stock} {language === 'zh' ? '件' : 'units'}
+                              {product.stock ?? '—'} {language === 'zh' ? '件' : 'units'}
                             </Badge>
                           </div>
                           <p className="text-xl font-bold text-green-600 mb-3">
-                            RM {product.price.toLocaleString()}
+                            {product.price != null ? `RM ${product.price.toLocaleString()}` : (language === 'zh' ? '价格请询问' : 'Price on request')}
                           </p>
                           <div className="flex gap-2">
                             <Button variant="outline" className="flex-1" size="sm">
@@ -1396,7 +1481,7 @@ function App() {
                           <div key={product.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                             <div className="flex items-center gap-3">
                               <span className="font-bold text-gray-400">#{idx + 1}</span>
-                              <span className="text-2xl">{product.image}</span>
+                              {product.images?.[0] ? <img src={product.images[0]} alt="" className="w-8 h-8 rounded object-cover" /> : <span className="text-2xl">{product.image}</span>}
                               <span className="font-semibold text-sm">{product.name}</span>
                             </div>
                             <span className="text-sm font-bold text-green-600">{Math.floor(Math.random() * 50) + 10} {language === 'zh' ? '件' : 'sold'}</span>
@@ -1630,19 +1715,19 @@ function App() {
                     return (
                       <Card key={product.id} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
-                          <div className="text-5xl mb-3 text-center">{product.image}</div>
+                          <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-gray-900" />
                           <div className="flex items-center justify-between mb-2">
                             <Badge className="bg-green-100 text-green-700 border-green-200">
                               {product.brand}
                             </Badge>
                             <Badge className={stockStatus.color}>
-                              {product.stock} {language === 'zh' ? '件' : 'units'}
+                              {product.stock ?? '—'} {language === 'zh' ? '件' : 'units'}
                             </Badge>
                           </div>
                           <h3 className="font-bold mb-2">{product.name}</h3>
                           <p className="text-sm text-gray-600 mb-3">{product.category}</p>
                           <p className="text-2xl font-bold text-green-600 mb-3">
-                            RM {product.price.toLocaleString()}
+                            {product.price != null ? `RM ${product.price.toLocaleString()}` : (language === 'zh' ? '价格请询问' : 'Price on request')}
                           </p>
                           <div className="flex gap-2">
                             <Button variant="outline" className="flex-1" size="sm">
