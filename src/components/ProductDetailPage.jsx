@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { showroom, displayFont } from '@/lib/showroom.js'
 import { ArrowLeft, Star, MessageSquareText, FileText, ImageIcon } from 'lucide-react'
 
 const labels = {
@@ -28,17 +29,8 @@ const labels = {
   },
 }
 
-// Showroom palette: the product posters are already loud (neon on black), so the page
-// stays quiet and cool so the poster is the one bright thing on screen.
-const c = {
-  floor: '#F3F4F2',   // showroom white
-  stage: '#2A2E33',   // graphite display plinth behind the product
-  rule: '#C9CDD1',    // brushed aluminium dividers
-  ink: '#1B1E21',
-  muted: '#5F666D',
-  go: '#0B8F5A',      // Eagerise green, used only for the inquiry action
-}
-const display = { fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif' }
+const c = showroom
+const display = displayFont
 
 // Template for the full product detail page. Every rich field is optional so
 // products can be filled in gradually: old records with only name/price/
