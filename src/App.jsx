@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input.jsx'
 import { Textarea } from '@/components/ui/textarea.jsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
+import ProductDetailPage from '@/components/ProductDetailPage.jsx'
 import { 
   Home, 
   Store, 
@@ -1861,75 +1862,14 @@ function App() {
         )}
       </main>
 
-      {/* Product Details Modal */}
+      {/* Product Details Page */}
       {selectedProduct && !showInquiryForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setSelectedProduct(null)}>
-          <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-2xl mb-2">{selectedProduct.name}</CardTitle>
-                  <div className="flex items-center gap-3 mb-3">
-                    <Badge className="bg-green-100 text-green-700 border-green-200">
-                      {selectedProduct.brand}
-                    </Badge>
-                    <div className="flex items-center">
-                      <Star className="w-5 h-5 fill-yellow-400 text-yellow-400 mr-1" />
-                      <span className="font-semibold">{selectedProduct.rating}</span>
-                    </div>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => setSelectedProduct(null)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="text-8xl text-center py-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
-                {selectedProduct.image}
-              </div>
-              
-              <div>
-                <h3 className="font-bold text-lg mb-2">{t.price}</h3>
-                <p className="text-4xl font-bold text-green-600">
-                  RM {selectedProduct.price.toLocaleString()}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-bold text-lg mb-2">{t.specifications}</h3>
-                <p className="text-gray-600 mb-3">{selectedProduct.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProduct.features.map((feature, idx) => (
-                    <Badge key={idx} variant="outline">
-                      {feature}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <Button 
-                  className="flex-1 bg-gradient-to-r from-green-600 to-green-500"
-                  onClick={() => handleInquiry(selectedProduct)}
-                >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  {t.inquire}
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex-1"
-                  onClick={() => setSelectedProduct(null)}
-                >
-                  {t.close}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <ProductDetailPage
+          product={selectedProduct}
+          language={language}
+          onBack={() => setSelectedProduct(null)}
+          onInquire={() => handleInquiry(selectedProduct)}
+        />
       )}
 
       {/* Inquiry Form Modal */}
