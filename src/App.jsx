@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Input } from '@/components/ui/input.jsx'
@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge.jsx'
 import ProductDetailPage from '@/components/ProductDetailPage.jsx'
 import ProductThumb from '@/components/ProductThumb.jsx'
 import ShowroomProductCard from '@/components/ShowroomProductCard.jsx'
+import ShowroomModal from '@/components/ShowroomModal.jsx'
 import { showroom, displayFont } from '@/lib/showroom.js'
 import { 
   Home, 
@@ -707,22 +708,22 @@ function App() {
 
   const stats = {
     customer: [
-      { label: t.totalProducts, value: '24', icon: Package, color: 'text-green-600' },
-      { label: t.activeDealers, value: '156', icon: Store, color: 'text-blue-600' },
-      { label: t.newLeads, value: '48', icon: Users, color: 'text-orange-600' },
-      { label: t.monthlySales, value: 'RM 2.4M', icon: TrendingUp, color: 'text-purple-600' }
+      { label: t.totalProducts, value: '24', icon: Package, color: 'text-[#5F666D]' },
+      { label: t.activeDealers, value: '156', icon: Store, color: 'text-[#5F666D]' },
+      { label: t.newLeads, value: '48', icon: Users, color: 'text-[#5F666D]' },
+      { label: t.monthlySales, value: 'RM 2.4M', icon: TrendingUp, color: 'text-[#5F666D]' }
     ],
     dealer: [
-      { label: t.pendingOrders, value: '12', icon: Clock, color: 'text-orange-600' },
-      { label: t.completedOrders, value: '156', icon: CheckCircle, color: 'text-green-600' },
-      { label: t.totalRevenue, value: 'RM 125K', icon: DollarSign, color: 'text-blue-600' },
-      { label: t.customerLeads, value: '48', icon: Users, color: 'text-purple-600' }
+      { label: t.pendingOrders, value: '12', icon: Clock, color: 'text-[#5F666D]' },
+      { label: t.completedOrders, value: '156', icon: CheckCircle, color: 'text-[#5F666D]' },
+      { label: t.totalRevenue, value: 'RM 125K', icon: DollarSign, color: 'text-[#5F666D]' },
+      { label: t.customerLeads, value: '48', icon: Users, color: 'text-[#5F666D]' }
     ],
     admin: [
-      { label: t.allDealers, value: '156', icon: Store, color: 'text-blue-600' },
-      { label: t.allProducts, value: '24', icon: Package, color: 'text-green-600' },
-      { label: t.allOrders, value: '1,234', icon: ShoppingCart, color: 'text-orange-600' },
-      { label: t.monthlySales, value: 'RM 2.4M', icon: TrendingUp, color: 'text-purple-600' }
+      { label: t.allDealers, value: '156', icon: Store, color: 'text-[#5F666D]' },
+      { label: t.allProducts, value: '24', icon: Package, color: 'text-[#5F666D]' },
+      { label: t.allOrders, value: '1,234', icon: ShoppingCart, color: 'text-[#5F666D]' },
+      { label: t.monthlySales, value: 'RM 2.4M', icon: TrendingUp, color: 'text-[#5F666D]' }
     ]
   }
 
@@ -767,6 +768,9 @@ function App() {
   }
 
   const navigation = getNavigation()
+
+  const closeInquiry = useCallback(() => setShowInquiryForm(false), [])
+  const closeDealer = useCallback(() => setSelectedDealer(null), [])
 
   // 处理产品详情
   const handleProductDetails = (product) => {
@@ -842,7 +846,7 @@ function App() {
   const featuredProducts = [...products].sort((a, b) => (b.images?.length ? 1 : 0) - (a.images?.length ? 1 : 0)).slice(0, 4)
 
   return (
-    <div className={`min-h-screen ${systemMode === 'customer' ? '' : 'bg-gradient-to-br from-gray-50 to-gray-100'}`} style={systemMode === 'customer' ? { background: showroom.floor } : undefined}>
+    <div className="min-h-screen" style={{ background: showroom.floor }}>
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur" style={{ background: 'rgba(243,244,242,.94)', borderBottom: `1px solid ${showroom.rule}`, color: showroom.ink }}>
         <div className="container mx-auto px-4">
@@ -1149,7 +1153,7 @@ function App() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-3xl font-bold mb-2">{t.dealerDashboard}</h2>
+                    <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.dealerDashboard}</h2>
                     <p className="text-gray-600">{t.welcomeBack}, Sound Masters KL</p>
                   </div>
                   <Button variant="outline">
@@ -1161,12 +1165,12 @@ function App() {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {stats.dealer.map((stat, index) => (
-                    <Card key={index} className="hover:shadow-lg transition-shadow">
+                    <Card key={index} className="">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-sm text-gray-500 mb-1">{stat.label}</p>
-                            <p className="text-3xl font-bold">{stat.value}</p>
+                            <p className="text-4xl font-bold" style={displayFont}>{stat.value}</p>
                           </div>
                           <stat.icon className={`w-12 h-12 ${stat.color}`} />
                         </div>
@@ -1177,23 +1181,23 @@ function App() {
 
                 {/* Quick Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('orders')}>
+                  <Card className="cursor-pointer" onClick={() => setActiveTab('orders')}>
                     <CardContent className="p-6 text-center">
-                      <ShoppingCart className="w-12 h-12 mx-auto mb-3 text-blue-600" />
+                      <ShoppingCart className="w-12 h-12 mx-auto mb-3 text-[#1B1E21]" />
                       <h3 className="font-bold mb-2">{t.myOrders}</h3>
                       <p className="text-sm text-gray-600">{t.manageOrders}</p>
                     </CardContent>
                   </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('customers')}>
+                  <Card className="cursor-pointer" onClick={() => setActiveTab('customers')}>
                     <CardContent className="p-6 text-center">
-                      <Users className="w-12 h-12 mx-auto mb-3 text-green-600" />
+                      <Users className="w-12 h-12 mx-auto mb-3 text-[#1B1E21]" />
                       <h3 className="font-bold mb-2">{t.myCustomers}</h3>
                       <p className="text-sm text-gray-600">{t.manageCustomers}</p>
                     </CardContent>
                   </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('inventory')}>
+                  <Card className="cursor-pointer" onClick={() => setActiveTab('inventory')}>
                     <CardContent className="p-6 text-center">
-                      <Package className="w-12 h-12 mx-auto mb-3 text-orange-600" />
+                      <Package className="w-12 h-12 mx-auto mb-3 text-[#1B1E21]" />
                       <h3 className="font-bold mb-2">{t.myInventory}</h3>
                       <p className="text-sm text-gray-600">{t.trackStock}</p>
                     </CardContent>
@@ -1216,7 +1220,7 @@ function App() {
                             <p className="text-xs text-gray-500 mt-1">{order.date}</p>
                           </div>
                           <div className="text-right mr-4">
-                            <p className="font-bold text-green-600">RM {order.total.toLocaleString()}</p>
+                            <p className="font-bold text-[#1B1E21]">RM {order.total.toLocaleString()}</p>
                           </div>
                           <Badge className={getOrderStatusColor(order.status)}>
                             {t[order.status]}
@@ -1234,7 +1238,7 @@ function App() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-3xl font-bold mb-2">{t.orderManagement}</h2>
+                    <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.orderManagement}</h2>
                     <p className="text-gray-600">{t.manageOrders}</p>
                   </div>
                   <Button>
@@ -1245,7 +1249,7 @@ function App() {
 
                 <div className="grid gap-4">
                   {orders.map((order) => (
-                    <Card key={order.id} className="hover:shadow-lg transition-shadow">
+                    <Card key={order.id} className="">
                       <CardContent className="p-6">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                           <div className="flex-1">
@@ -1262,7 +1266,7 @@ function App() {
                           <div className="flex items-center gap-4">
                             <div className="text-right">
                               <p className="text-sm text-gray-500">{t.orderTotal}</p>
-                              <p className="text-2xl font-bold text-green-600">RM {order.total.toLocaleString()}</p>
+                              <p className="text-2xl font-bold text-[#1B1E21]">RM {order.total.toLocaleString()}</p>
                             </div>
                             <Button variant="outline">
                               <Eye className="w-4 h-4 mr-2" />
@@ -1281,17 +1285,17 @@ function App() {
             {activeTab === 'customers' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-3xl font-bold mb-2">{t.customerManagement}</h2>
+                  <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.customerManagement}</h2>
                   <p className="text-gray-600">{t.manageCustomers}</p>
                 </div>
 
                 <div className="grid gap-4">
                   {customers.map((customer) => (
-                    <Card key={customer.id} className="hover:shadow-lg transition-shadow">
+                    <Card key={customer.id} className="">
                       <CardContent className="p-6">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                            <div className="w-12 h-12 bg-[#2A2E33] rounded-full flex items-center justify-center text-white font-bold text-xl">
                               {customer.name.charAt(0)}
                             </div>
                             <div>
@@ -1311,7 +1315,7 @@ function App() {
                             </div>
                             <div>
                               <p className="text-sm text-gray-500">{t.totalRevenue}</p>
-                              <p className="text-lg font-bold text-green-600">RM {customer.totalSpent.toLocaleString()}</p>
+                              <p className="text-lg font-bold text-[#1B1E21]">RM {customer.totalSpent.toLocaleString()}</p>
                             </div>
                           </div>
                         </div>
@@ -1326,7 +1330,7 @@ function App() {
             {activeTab === 'inventory' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-3xl font-bold mb-2">{t.inventoryManagement}</h2>
+                  <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.inventoryManagement}</h2>
                   <p className="text-gray-600">{t.trackStock}</p>
                 </div>
 
@@ -1334,7 +1338,7 @@ function App() {
                   {products.map((product) => {
                     const stockStatus = getStockStatus(product.stock)
                     return (
-                      <Card key={product.id} className="hover:shadow-lg transition-shadow">
+                      <Card key={product.id} className="">
                         <CardContent className="p-6">
                           <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-[#2A2E33]" />
                           <Badge className="mb-2 bg-green-100 text-green-700 border-green-200">
@@ -1347,7 +1351,7 @@ function App() {
                               {product.stock ?? '—'} {language === 'zh' ? '件' : 'units'}
                             </Badge>
                           </div>
-                          <p className="text-xl font-bold text-green-600 mb-3">
+                          <p className="text-xl font-bold text-[#1B1E21] mb-3">
                             {product.price != null ? `RM ${product.price.toLocaleString()}` : (language === 'zh' ? '价格请询问' : 'Price on request')}
                           </p>
                           <div className="flex gap-2">
@@ -1372,7 +1376,7 @@ function App() {
             {activeTab === 'reports' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-3xl font-bold mb-2">{t.myReports}</h2>
+                  <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.myReports}</h2>
                   <p className="text-gray-600">{language === 'zh' ? '查看您的业绩报表和分析' : 'View your performance reports and analytics'}</p>
                 </div>
 
@@ -1401,7 +1405,7 @@ function App() {
                               {product.images?.[0] ? <img src={product.images[0]} alt="" className="w-8 h-8 rounded object-cover" /> : <span className="text-2xl">{product.image}</span>}
                               <span className="font-semibold text-sm">{product.name}</span>
                             </div>
-                            <span className="text-sm font-bold text-green-600">{Math.floor(Math.random() * 50) + 10} {language === 'zh' ? '件' : 'sold'}</span>
+                            <span className="text-sm font-bold text-[#1B1E21]">{Math.floor(Math.random() * 50) + 10} {language === 'zh' ? '件' : 'sold'}</span>
                           </div>
                         ))}
                       </div>
@@ -1418,30 +1422,30 @@ function App() {
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium">{language === 'zh' ? '销售目标完成度' : 'Sales Target Achievement'}</span>
-                          <span className="text-sm font-bold text-green-600">85%</span>
+                          <span className="text-sm font-bold text-[#1B1E21]">85%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-green-600 to-green-500 h-2 rounded-full" style={{width: '85%'}}></div>
+                          <div className="bg-[#0B8F5A] hover:bg-[#097A4D] h-2 rounded-full" style={{width: '85%'}}></div>
                         </div>
                       </div>
 
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium">{language === 'zh' ? '客户满意度' : 'Customer Satisfaction'}</span>
-                          <span className="text-sm font-bold text-green-600">92%</span>
+                          <span className="text-sm font-bold text-[#1B1E21]">92%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-green-600 to-green-500 h-2 rounded-full" style={{width: '92%'}}></div>
+                          <div className="bg-[#0B8F5A] hover:bg-[#097A4D] h-2 rounded-full" style={{width: '92%'}}></div>
                         </div>
                       </div>
 
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium">{language === 'zh' ? '订单处理效率' : 'Order Processing Efficiency'}</span>
-                          <span className="text-sm font-bold text-green-600">78%</span>
+                          <span className="text-sm font-bold text-[#1B1E21]">78%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-green-600 to-green-500 h-2 rounded-full" style={{width: '78%'}}></div>
+                          <div className="bg-[#0B8F5A] hover:bg-[#097A4D] h-2 rounded-full" style={{width: '78%'}}></div>
                         </div>
                       </div>
                     </div>
@@ -1460,7 +1464,7 @@ function App() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-3xl font-bold mb-2">{t.adminDashboard}</h2>
+                    <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.adminDashboard}</h2>
                     <p className="text-gray-600">{t.systemOverview}</p>
                   </div>
                   <Button>
@@ -1472,12 +1476,12 @@ function App() {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {stats.admin.map((stat, index) => (
-                    <Card key={index} className="hover:shadow-lg transition-shadow">
+                    <Card key={index} className="">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-sm text-gray-500 mb-1">{stat.label}</p>
-                            <p className="text-3xl font-bold">{stat.value}</p>
+                            <p className="text-4xl font-bold" style={displayFont}>{stat.value}</p>
                           </div>
                           <stat.icon className={`w-12 h-12 ${stat.color}`} />
                         </div>
@@ -1488,23 +1492,23 @@ function App() {
 
                 {/* Quick Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('dealers')}>
+                  <Card className="cursor-pointer" onClick={() => setActiveTab('dealers')}>
                     <CardContent className="p-6 text-center">
-                      <Store className="w-12 h-12 mx-auto mb-3 text-blue-600" />
+                      <Store className="w-12 h-12 mx-auto mb-3 text-[#1B1E21]" />
                       <h3 className="font-bold mb-2">{t.dealerManagement}</h3>
                       <p className="text-sm text-gray-600">{t.manageDealers}</p>
                     </CardContent>
                   </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('products')}>
+                  <Card className="cursor-pointer" onClick={() => setActiveTab('products')}>
                     <CardContent className="p-6 text-center">
-                      <Package className="w-12 h-12 mx-auto mb-3 text-green-600" />
+                      <Package className="w-12 h-12 mx-auto mb-3 text-[#1B1E21]" />
                       <h3 className="font-bold mb-2">{t.productManagement}</h3>
                       <p className="text-sm text-gray-600">{t.manageProducts}</p>
                     </CardContent>
                   </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('reports')}>
+                  <Card className="cursor-pointer" onClick={() => setActiveTab('reports')}>
                     <CardContent className="p-6 text-center">
-                      <BarChart3 className="w-12 h-12 mx-auto mb-3 text-purple-600" />
+                      <BarChart3 className="w-12 h-12 mx-auto mb-3 text-[#1B1E21]" />
                       <h3 className="font-bold mb-2">{t.systemReports}</h3>
                       <p className="text-sm text-gray-600">{t.viewReports}</p>
                     </CardContent>
@@ -1550,10 +1554,10 @@ function App() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-3xl font-bold mb-2">{t.dealerManagement}</h2>
+                    <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.dealerManagement}</h2>
                     <p className="text-gray-600">{t.manageDealers}</p>
                   </div>
-                  <Button className="bg-gradient-to-r from-green-600 to-green-500">
+                  <Button className="bg-[#0B8F5A] hover:bg-[#097A4D]">
                     <Plus className="w-4 h-4 mr-2" />
                     {t.addDealer}
                   </Button>
@@ -1561,11 +1565,11 @@ function App() {
 
                 <div className="grid gap-4">
                   {dealers.map((dealer) => (
-                    <Card key={dealer.id} className="hover:shadow-lg transition-shadow">
+                    <Card key={dealer.id} className="">
                       <CardContent className="p-6">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                            <div className="w-12 h-12 bg-[#2A2E33] rounded-full flex items-center justify-center">
                               <Store className="w-6 h-6 text-white" />
                             </div>
                             <div>
@@ -1591,7 +1595,7 @@ function App() {
                             </div>
                             <div>
                               <p className="text-sm text-gray-500">{t.totalRevenue}</p>
-                              <p className="text-lg font-bold text-green-600">RM {(dealer.monthlyRevenue / 1000).toFixed(0)}K</p>
+                              <p className="text-lg font-bold text-[#1B1E21]">RM {(dealer.monthlyRevenue / 1000).toFixed(0)}K</p>
                             </div>
                           </div>
                           <div className="flex gap-2">
@@ -1617,10 +1621,10 @@ function App() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-3xl font-bold mb-2">{t.productManagement}</h2>
+                    <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.productManagement}</h2>
                     <p className="text-gray-600">{t.manageProducts}</p>
                   </div>
-                  <Button className="bg-gradient-to-r from-green-600 to-green-500">
+                  <Button className="bg-[#0B8F5A] hover:bg-[#097A4D]">
                     <Plus className="w-4 h-4 mr-2" />
                     {t.addProduct}
                   </Button>
@@ -1630,7 +1634,7 @@ function App() {
                   {products.map((product) => {
                     const stockStatus = getStockStatus(product.stock)
                     return (
-                      <Card key={product.id} className="hover:shadow-lg transition-shadow">
+                      <Card key={product.id} className="">
                         <CardContent className="p-6">
                           <ProductThumb product={product} emojiClass="text-5xl mb-3 text-center" imgClass="w-full aspect-square object-contain rounded-lg mb-3 bg-[#2A2E33]" />
                           <div className="flex items-center justify-between mb-2">
@@ -1643,7 +1647,7 @@ function App() {
                           </div>
                           <h3 className="font-bold mb-2">{product.name}</h3>
                           <p className="text-sm text-gray-600 mb-3">{product.category}</p>
-                          <p className="text-2xl font-bold text-green-600 mb-3">
+                          <p className="text-2xl font-bold text-[#1B1E21] mb-3">
                             {product.price != null ? `RM ${product.price.toLocaleString()}` : (language === 'zh' ? '价格请询问' : 'Price on request')}
                           </p>
                           <div className="flex gap-2">
@@ -1669,7 +1673,7 @@ function App() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-3xl font-bold mb-2">{t.allOrders}</h2>
+                    <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.allOrders}</h2>
                     <p className="text-gray-600">{language === 'zh' ? '管理系统中的所有订单' : 'Manage all orders in the system'}</p>
                   </div>
                   <div className="flex gap-2">
@@ -1686,7 +1690,7 @@ function App() {
 
                 <div className="grid gap-4">
                   {orders.map((order) => (
-                    <Card key={order.id} className="hover:shadow-lg transition-shadow">
+                    <Card key={order.id} className="">
                       <CardContent className="p-6">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                           <div className="flex-1">
@@ -1704,7 +1708,7 @@ function App() {
                           <div className="flex items-center gap-4">
                             <div className="text-right">
                               <p className="text-sm text-gray-500">{t.orderTotal}</p>
-                              <p className="text-2xl font-bold text-green-600">RM {order.total.toLocaleString()}</p>
+                              <p className="text-2xl font-bold text-[#1B1E21]">RM {order.total.toLocaleString()}</p>
                             </div>
                             <Button variant="outline">
                               <Eye className="w-4 h-4 mr-2" />
@@ -1724,7 +1728,7 @@ function App() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-3xl font-bold mb-2">{t.systemReports}</h2>
+                    <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.systemReports}</h2>
                     <p className="text-gray-600">{t.viewReports}</p>
                   </div>
                   <Button>
@@ -1757,7 +1761,7 @@ function App() {
                               <span className="font-bold text-gray-400">#{idx + 1}</span>
                               <span className="font-semibold text-sm">{dealer.name}</span>
                             </div>
-                            <span className="text-sm font-bold text-green-600">RM {(dealer.monthlyRevenue / 1000).toFixed(0)}K</span>
+                            <span className="text-sm font-bold text-[#1B1E21]">RM {(dealer.monthlyRevenue / 1000).toFixed(0)}K</span>
                           </div>
                         ))}
                       </div>
@@ -1790,10 +1794,10 @@ function App() {
                           <div key={idx}>
                             <div className="flex items-center justify-between mb-2">
                               <span className="text-sm font-medium">{item.region}</span>
-                              <span className="text-sm font-bold text-green-600">{item.value}%</span>
+                              <span className="text-sm font-bold text-[#1B1E21]">{item.value}%</span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div className="bg-gradient-to-r from-green-600 to-green-500 h-2 rounded-full" style={{width: `${item.value}%`}}></div>
+                              <div className="bg-[#0B8F5A] hover:bg-[#097A4D] h-2 rounded-full" style={{width: `${item.value}%`}}></div>
                             </div>
                           </div>
                         ))}
@@ -1808,7 +1812,7 @@ function App() {
             {activeTab === 'settings' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-3xl font-bold mb-2">{t.systemSettings}</h2>
+                  <h2 className="text-5xl font-bold leading-none mb-2" style={displayFont}>{t.systemSettings}</h2>
                   <p className="text-gray-600">{language === 'zh' ? '配置系统参数和选项' : 'Configure system parameters and options'}</p>
                 </div>
 
@@ -1855,7 +1859,7 @@ function App() {
 
                   <div className="flex justify-end gap-3">
                     <Button variant="outline">{t.cancel}</Button>
-                    <Button className="bg-gradient-to-r from-green-600 to-green-500">{t.save}</Button>
+                    <Button className="bg-[#0B8F5A] hover:bg-[#097A4D]">{t.save}</Button>
                   </div>
                 </div>
               </div>
@@ -1876,121 +1880,75 @@ function App() {
 
       {/* Inquiry Form Modal */}
       {showInquiryForm && selectedProduct && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowInquiryForm(false)}>
-          <Card className="max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle>{t.inquiryForm}</CardTitle>
-                  <CardDescription className="mt-2">{selectedProduct.name}</CardDescription>
-                </div>
-                <button 
-                  onClick={() => setShowInquiryForm(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X className="w-6 h-6" />
-                </button>
+        <ShowroomModal title={t.inquiryForm} subtitle={selectedProduct.name} closeLabel={t.close} onClose={closeInquiry}>
+          {inquirySuccess ? (
+              <div className="py-8 text-center">
+                <CheckCircle2 className="w-14 h-14 mx-auto mb-3" style={{ color: showroom.go }} />
+                <p className="text-lg font-semibold">{t.inquirySent}</p>
               </div>
-            </CardHeader>
-            <CardContent>
-              {inquirySuccess ? (
-                <div className="text-center py-8">
-                  <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                  <p className="text-lg font-semibold text-green-600">{t.inquirySent}</p>
-                </div>
-              ) : (
-                <form onSubmit={handleInquirySubmit} className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">{t.yourName}</label>
-                    <Input name="name" required placeholder={t.yourName} />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">{t.yourEmail}</label>
-                    <Input name="email" type="email" required placeholder={t.yourEmail} />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">{t.yourPhone}</label>
-                    <Input name="phone" required placeholder={t.yourPhone} />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">{t.message}</label>
-                    <Textarea name="message" required placeholder={t.message} rows={4} />
-                  </div>
-                  <Button type="submit" className="w-full bg-gradient-to-r from-green-600 to-green-500">
-                    <Send className="w-4 h-4 mr-2" />
-                    {t.submit}
-                  </Button>
-                </form>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+          ) : (
+            <form onSubmit={handleInquirySubmit} className="space-y-4">
+                <label className="block">
+                  <span className="text-sm font-medium mb-1.5 block">{t.yourName}</span>
+                  <Input name="name" autoComplete="name" required className="h-11 text-base bg-white" />
+                </label>
+                <label className="block">
+                  <span className="text-sm font-medium mb-1.5 block">{t.yourEmail}</span>
+                  <Input name="email" type="email" autoComplete="email" required className="h-11 text-base bg-white" />
+                </label>
+                <label className="block">
+                  <span className="text-sm font-medium mb-1.5 block">{t.yourPhone}</span>
+                  <Input name="phone" type="tel" autoComplete="tel" required className="h-11 text-base bg-white" />
+                </label>
+                <label className="block">
+                  <span className="text-sm font-medium mb-1.5 block">{t.message}</span>
+                  <Textarea name="message" required rows={4} className="text-base bg-white" />
+                </label>
+                <button type="submit" className="w-full min-h-[48px] rounded-md text-white font-medium flex items-center justify-center gap-2" style={{ background: showroom.go }}>
+                  <Send className="w-4 h-4" />
+                  {t.submit}
+                </button>
+            </form>
+          )}
+        </ShowroomModal>
       )}
 
       {/* Dealer Contact Modal */}
       {selectedDealer && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setSelectedDealer(null)}>
-          <Card className="max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle>{t.dealerContact}</CardTitle>
-                  <CardDescription className="mt-2">{selectedDealer.name}</CardDescription>
-                </div>
-                <button 
-                  onClick={() => setSelectedDealer(null)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X className="w-6 h-6" />
-                </button>
+        <ShowroomModal title={t.dealerContact} subtitle={selectedDealer.name} closeLabel={t.close} onClose={closeDealer}>
+          {inquirySuccess ? (
+              <div className="py-8 text-center">
+                <CheckCircle2 className="w-14 h-14 mx-auto mb-3" style={{ color: showroom.go }} />
+                <p className="text-lg font-semibold">{t.messageSent}</p>
               </div>
-            </CardHeader>
-            <CardContent>
-              {inquirySuccess ? (
-                <div className="text-center py-8">
-                  <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                  <p className="text-lg font-semibold text-green-600">{t.messageSent}</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      <span className="text-sm">{selectedDealer.address}</span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <Phone className="w-4 h-4 mr-2" />
-                      <span className="text-sm">{selectedDealer.phone}</span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <Mail className="w-4 h-4 mr-2" />
-                      <span className="text-sm">{selectedDealer.email}</span>
-                    </div>
-                  </div>
-
-                  <form onSubmit={handleSendMessage} className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">{t.yourName}</label>
-                      <Input name="name" required placeholder={t.yourName} />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">{t.yourEmail}</label>
-                      <Input name="email" type="email" required placeholder={t.yourEmail} />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">{t.message}</label>
-                      <Textarea name="message" required placeholder={t.message} rows={4} />
-                    </div>
-                    <Button type="submit" className="w-full bg-gradient-to-r from-green-600 to-green-500">
-                      <Send className="w-4 h-4 mr-2" />
-                      {t.sendMessage}
-                    </Button>
-                  </form>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+          ) : (
+            <>
+              <div className="space-y-1 pb-4 mb-4 text-[15px]" style={{ borderBottom: `1px solid ${showroom.rule}` }}>
+                {selectedDealer.address && <p className="flex items-center gap-2" style={{ color: showroom.muted }}><MapPin className="w-4 h-4 shrink-0" />{selectedDealer.address}</p>}
+                <a href={`tel:${selectedDealer.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 min-h-[40px] underline underline-offset-4"><Phone className="w-4 h-4" />{selectedDealer.phone}</a>
+                <a href={`mailto:${selectedDealer.email}`} className="flex items-center gap-2 min-h-[40px] underline underline-offset-4"><Mail className="w-4 h-4" />{selectedDealer.email}</a>
+              </div>
+              <form onSubmit={handleSendMessage} className="space-y-4">
+                <label className="block">
+                  <span className="text-sm font-medium mb-1.5 block">{t.yourName}</span>
+                  <Input name="name" autoComplete="name" required className="h-11 text-base bg-white" />
+                </label>
+                <label className="block">
+                  <span className="text-sm font-medium mb-1.5 block">{t.yourEmail}</span>
+                  <Input name="email" type="email" autoComplete="email" required className="h-11 text-base bg-white" />
+                </label>
+                <label className="block">
+                  <span className="text-sm font-medium mb-1.5 block">{t.message}</span>
+                  <Textarea name="message" required rows={4} className="text-base bg-white" />
+                </label>
+                <button type="submit" className="w-full min-h-[48px] rounded-md text-white font-medium flex items-center justify-center gap-2" style={{ background: showroom.go }}>
+                  <Send className="w-4 h-4" />
+                  {t.sendMessage}
+                </button>
+              </form>
+            </>
+          )}
+        </ShowroomModal>
       )}
 
       {/* Footer */}
