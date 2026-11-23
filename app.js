@@ -27,3 +27,19 @@ vehicleForm.addEventListener('reset',()=>{vehicle=null;interest='';for(const id 
 $('car-product').value=[...$('car-product').options].some(o=>o.value===interest)?interest:'';
 const selectProduct=$('product-dealer').onclick;$('product-dealer').onclick=()=>{selectProduct();$('car-product').value=interest;};
 const clearProduct=$('clear-interest').onclick;$('clear-interest').onclick=()=>{clearProduct();$('car-product').value='';};
+
+// Model lineup: cards open the shared product dialog with posters and specs; "Find a dealer" then
+// carries the model name (e.g. "APEX 7870") into the WhatsApp enquiry like a category does.
+const lineup=window.EXCEDIO_PRODUCTS||[];
+const modelName=p=>p.series+(p.code.startsWith('Model ')?' '+p.code.slice(6):' '+p.code);
+function showImage(p,i){$('product-image').src='assets/products/'+p.images[i];$('product-image').alt=modelName(p)+' poster '+(i+1)+' of '+p.images.length;[...$('product-thumbs').children].forEach((b,j)=>b.setAttribute('aria-pressed',String(j===i)));}
+function openModel(p,card){activeCard=card;$('product-name').textContent=modelName(p);$('product-tier').textContent=p.tier+' — '+p.tagline;$('product-tier').hidden=false;$('product-description').textContent=p.description;
+ $('product-thumbs').replaceChildren(...(p.images.length>1?p.images.map((src,i)=>{const b=el('button',null,'thumb');b.type='button';b.setAttribute('aria-label','Show poster '+(i+1));const img=el('img');img.src='assets/products/'+src;img.alt='';b.append(img);b.onclick=()=>showImage(p,i);return b;}):[]));
+ showImage(p,0);$('product-media').hidden=false;
+ $('product-specs').replaceChildren(...p.specs.flatMap(([k,v])=>[el('dt',k),el('dd',v)]));$('product-specs').hidden=false;
+ dialog.showModal();}
+$('lineup-grid').replaceChildren(...lineup.map(p=>{const card=el('button',null,'model-card');card.type='button';const photo=el('div',null,'model-photo');const img=el('img');img.src='assets/products/'+p.images[0];img.alt=modelName(p)+' product poster';img.loading='lazy';img.decoding='async';img.width=1000;img.height=1000;photo.append(img);card.append(photo,el('p',p.tier,'model-tier'),el('h4',p.series,'model-series'),el('p',p.code,'model-code'),el('p',p.tagline,'model-tagline'));card.onclick=()=>openModel(p,card);return card;}));
+$('model-options').replaceChildren(...lineup.map(p=>new Option(modelName(p),modelName(p))));
+$('car-product').value=[...$('car-product').options].some(o=>o.value===interest)?interest:'';
+// 👑 Category cards reuse this dialog without posters/specs, so reset model-only parts on every close.
+dialog.addEventListener('close',()=>{$('product-media').hidden=true;$('product-specs').hidden=true;$('product-tier').hidden=true;$('product-image').removeAttribute('src');});
