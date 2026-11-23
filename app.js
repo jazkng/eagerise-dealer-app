@@ -51,3 +51,12 @@ $('model-options').replaceChildren(...lineup.map(p=>new Option(modelName(p),mode
 $('car-product').value=[...$('car-product').options].some(o=>o.value===interest)?interest:'';
 // 👑 Category cards reuse this dialog without posters/specs, so reset model-only parts on every close.
 dialog.addEventListener('close',()=>{$('product-media').hidden=true;$('product-specs').hidden=true;$('product-tier').hidden=true;$('product-image').removeAttribute('src');});
+
+// Hero carousel: auto-advances every 5s, pauses while hovered/focused or when the tab is hidden,
+// and stays on the first slide for visitors who prefer reduced motion.
+(()=>{const box=$('hero-slides');if(!box)return;const slides=[...box.querySelectorAll('.slide')],dots=[...box.querySelectorAll('.slide-dots button')];let i=0,timer=null;
+const show=n=>{i=(n+slides.length)%slides.length;slides.forEach((s,k)=>s.classList.toggle('is-active',k===i));dots.forEach((d,k)=>d.setAttribute('aria-pressed',String(k===i)));};
+const stop=()=>{clearInterval(timer);timer=null;};const start=()=>{if(timer||matchMedia('(prefers-reduced-motion: reduce)').matches)return;timer=setInterval(()=>show(i+1),5000);};
+dots.forEach((d,k)=>d.onclick=()=>{show(k);stop();start();});
+box.addEventListener('mouseenter',stop);box.addEventListener('mouseleave',start);box.addEventListener('focusin',stop);box.addEventListener('focusout',start);
+document.addEventListener('visibilitychange',()=>document.hidden?stop():start());start();})();
