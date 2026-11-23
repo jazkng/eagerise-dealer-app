@@ -38,7 +38,15 @@ function openModel(p,card){activeCard=card;$('product-name').textContent=modelNa
  showImage(p,0);$('product-media').hidden=false;
  $('product-specs').replaceChildren(...p.specs.flatMap(([k,v])=>[el('dt',k),el('dd',v)]));$('product-specs').hidden=false;
  dialog.showModal();}
-$('lineup-grid').replaceChildren(...lineup.map(p=>{const card=el('button',null,'model-card');card.type='button';const photo=el('div',null,'model-photo');const img=el('img');img.src='assets/products/'+p.images[0];img.alt=modelName(p)+' product poster';img.loading='lazy';img.decoding='async';img.width=1000;img.height=1000;photo.append(img);card.append(photo,el('p',p.tier,'model-tier'),el('h4',p.series,'model-series'),el('p',p.code,'model-code'),el('p',p.tagline,'model-tagline'));card.onclick=()=>openModel(p,card);return card;}));
+function modelCard(p){const card=el('button',null,'model-card');card.type='button';const photo=el('div',null,'model-photo');const img=el('img');img.src='assets/products/'+p.images[0];img.alt=modelName(p)+' product poster';img.loading='lazy';img.decoding='async';img.width=1000;img.height=1000;photo.append(img);card.append(photo,el('p',p.tier,'model-tier'),el('h4',p.series,'model-series'),el('p',p.code,'model-code'),el('p',p.tagline,'model-tagline'));card.onclick=()=>openModel(p,card);return card;}
+// Categories double as filters. Driving Safety and Car Audio have no supplied models yet, so they
+// show an "ask a dealer" card instead of an empty grid.
+const categoryNames=Object.values(categories).map(c=>c[0]);let activeCategory='';
+function soonCard(name){const card=el('div',null,'model-card soon');card.append(el('p','Coming soon','model-tier'),el('h4',name,'model-series'),el('p',categories[Object.keys(categories).find(k=>categories[k][0]===name)][1],'model-tagline'));const ask=el('button','Ask a dealer ↗','button lime');ask.type='button';ask.onclick=()=>{interest=name;page=1;render();$('car-product').value=name;$('dealers').scrollIntoView({block:'start'});};card.append(ask);return card;}
+function renderLineup(){const shown=lineup.filter(p=>!activeCategory||p.category===activeCategory);
+ $('lineup-grid').replaceChildren(...shown.map(modelCard),...(activeCategory&&!shown.length?[soonCard(activeCategory)]:[]));
+ $('category-filter').replaceChildren(...['',...categoryNames].map(name=>{const n=lineup.filter(p=>!name||p.category===name).length;const b=el('button',null,'chip');b.type='button';b.append(name||'All');if(n)b.append(el('span',String(n),'chip-count'));b.setAttribute('aria-pressed',String(name===activeCategory));b.onclick=()=>{activeCategory=name;renderLineup();};return b;}));}
+renderLineup();
 $('model-options').replaceChildren(...lineup.map(p=>new Option(modelName(p),modelName(p))));
 $('car-product').value=[...$('car-product').options].some(o=>o.value===interest)?interest:'';
 // 👑 Category cards reuse this dialog without posters/specs, so reset model-only parts on every close.
