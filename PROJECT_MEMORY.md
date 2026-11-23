@@ -11,7 +11,6 @@ Statuses: proposed, user-confirmed, verified, pending, completed, superseded. A 
 | ID | Date | Category | Status | Fact / decision | Source | Next action |
 |---|---|---|---|---|---|---|
 | MAINT-20261118-001 | 2026-11-18 | Repository hygiene | pending | Add missing .gitignore and PR lint/build workflow; remove unused selectedOrder state and use an ESM-compatible Vite alias. Add docs/MODULE_MAP.md. Preserve static sample business data and UI behavior. | GitHub maintenance request; .gitignore. | Verify PR checks and merge; this change does not verify deployment or change runtime data. |
-| CATALOG-20261123-001 | 2026-11-23 | Product catalog | pending | Added EXCEDIO APEX 7870 and ELITE 7865 (multi-image), enriched T9/T100/T133/360/6-Way with supplier specs; order APEX→ELITE→VISION→CORE→WIDE→cameras. ELITE TS10 listed in lineup xlsx but has no image/copy, not added. Price/stock/warranty still missing. | Supplier Google Drive folder; src/App.jsx | Get TS10 assets, prices and warranty from supplier. |
 
 ## Current work
 
