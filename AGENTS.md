@@ -96,13 +96,15 @@ Project-specific rules live in the "Project rules" section of each repo's AGENTS
 ```
 <!-- ai-rules:end -->
 
-# Project rules — Eagerise dealer platform
+# Project rules — Excedio website
 
-<!-- Overrides the shared rules above when they conflict. -->
-
-- Purpose: Dealer platform: brand product catalog, dealer lookup, customer lead management (Malaysia). This repo is public.
-- Base branch: `main`.
-- Read first: `README.md`, `PROJECT_README.md`, `DEPLOYMENT_GUIDE.md`.
-- Module map: `docs/MODULE_MAP.md`.
-- Checks before a PR: `pnpm lint`, `pnpm build`.
-- Branches: one branch (`main`). Agents merge their own PRs when checks pass; merging into `main` deploys production on Vercel.
+- Purpose: Excedio automotive brand website and dealer locator. This repository is public; its legacy name remains `eagerise-dealer-app`.
+- Base branch: `main`. Work on an agent branch, open a PR, and merge after checks pass.
+- Authoritative imported source: ChatGPT Site `appgprj_6aa2cea3ac748191a76481dc36d13648`, version 1, source commit `cca11c7a2cb2cacbd6aa5f8b722948252442c73f`.
+- Read first: `README.md`, `DEPLOYMENT_GUIDE.md`, `PROJECT_MEMORY.md`, `docs/MODULE_MAP.md`.
+- Checks: `npm run lint`, `npm run build`. No runtime dependencies or package installation are required for these checks.
+- Edit root `index.html`, `style.css`, `app.js`, `dealers.js` and `assets/`; regenerate `dist/` with the build command.
+- Keep `noindex,nofollow` until the owner approves indexing and the dealer/product information is verified.
+- Never add private customer/account data, credentials, or source access tokens.
+- GitHub and ChatGPT Sites are separate repositories. Importing does not configure automatic synchronization; do not claim a GitHub push updates the ChatGPT Site.
+- Existing Vercel integration may deploy on merge; verify its result before claiming deployment success.

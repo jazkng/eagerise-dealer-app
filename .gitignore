@@ -1,23 +1,7 @@
-# Dependencies and generated output
 node_modules/
-dist/
-coverage/
-.vite/
-.vercel/
-
-# Local configuration and private credentials
 .env
 .env.*
 !.env.example
-*.pem
-*.key
-*.p12
-*.pfx
-credentials.json
-*service-account*.json
-*-credentials.json
-
-# Local logs and operating-system files
+.vercel/
 *.log
 .DS_Store
-Thumbs.db
