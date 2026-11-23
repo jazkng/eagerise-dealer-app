@@ -1,14 +1,12 @@
-# 业务模块位置
+# Excedio module map
 
-当前是静态示例应用；以下数据均在 `src/App.jsx` 中定义或保存在 React 本机状态，未接入真实交易或客户数据库。`src/components/ui/` 为共用组件库。
+| 业务功能 | 入口 / 导航 | 主要文件 | 数据读取 / 写入 |
+|---|---|---|---|
+| 品牌首页与介绍 | `#home`, `#about` | `index.html`, `style.css`, `assets/logo.png` | 静态内容，只读 |
+| 产品分类与弹窗 | `#products` | `index.html`, `app.js`, `assets/category-*.png` | 分类概念资料；浏览器状态 |
+| 经销商查询 | `#dealers` | `app.js`, `dealers.js` | 172 条已导入门店；关键词、州、城市及分页存在 URL |
+| 车型询价 | `#vehicle-form` | `index.html`, `app.js` | 临时浏览器状态；生成 WhatsApp 文案，不自动发送 |
+| 门店联络与地图 | 经销商卡片 | `app.js` | 打开电话、WhatsApp 或 Google Maps 搜索链接 |
+| 支持与移动导航 | `#support`, Menu | `index.html`, `app.js`, `style.css` | 静态 FAQ 与浏览器状态 |
 
-| 业务功能 | 入口 / 导航 | 主要组件 | 相关工具 | 数据读取 / 写入 |
-|---|---|---|---|---|
-| 首页与品牌展示 | home | App.jsx 首页分支（展厅风格）| ShowroomProductCard、`src/lib/showroom.js` 配色 | 内置产品与示例统计，只读 |
-| 产品目录与详情 | products | App.jsx 产品列表（ShowroomProductCard）；`src/components/ProductDetailPage.jsx` 全屏详情页 | Input、Card、Button、Badge | 内置产品；本机搜索与 selectedProduct；产品图片放 `public/products/<品牌>/`（webp）；详情页可选字段 images/highlights/specs/inBox/warranty/downloads，缺资料显示「资料待补充」 |
-| 经销商查询与详情 | dealers | App.jsx 经销商列表（展厅风格，查看地图开 Google Maps）| Input、Card、Button | 内置经销商；本机搜索与 selectedDealer |
-| 经销商看板 | dashboard | App.jsx 看板分支 | Tabs、Card、Badge | 内置线索、库存、示例指标，只读 |
-| 产品询价 | 产品询价按钮 | App.jsx 询价表单（`ShowroomModal`）| Input、Textarea | 表单状态与成功提示；未发送到后端 |
-| 语言与模式切换 | 顶部导航 | App.jsx 导航与 translations | Button | 本机 language、systemMode、activeTab 状态 |
-
-入口：`src/main.jsx`。构建：`vite.config.js`，`@` 指向 `src/`。检查：`.github/workflows/ci.yml` 执行锁定依赖安装、lint 和构建。
+Root files are editable source. `npm run build` regenerates `dist/`; `.openai/hosting.json` retains the original ChatGPT Site identity.

@@ -1,44 +1,37 @@
-<!-- README-DESIGN: unified-v1 -->
-<div align="center">
+# Excedio website V1
 
-# EAGERISE
+Local, responsive brand website. Open index.html directly, or serve this directory with any static web server. No build step, third-party scripts, API key or backend is required.
 
-**经销商平台**
+Includes brand homepage, four provisional category entry points, brand introduction, dealer search with dependent state/city filters and pagination, phone links, Google Maps search links for fuller addresses, support FAQs and mobile navigation.
 
-把品牌产品、经销商与客户线索，连接在同一界面。
+Data: 172 named candidate stores, excluding the unnamed account and consolidating the three old-account pairs. The original five reports remain authoritative; the later consolidated workbook omitted some contact data. Only name, address, state, city, postcode and primary phone candidate are exposed. Private account codes, salesperson data and credit terms are excluded. WhatsApp buttons follow the owner-approved mobile-prefix rule (01 numbers), including secondary mobile numbers. Active WhatsApp accounts have not been independently checked. Precise coordinates and current authorised status remain unverified.
 
-`eagerise-dealer-app` &nbsp; / &nbsp; `jazkng`
+Product categories and conceptual CSS illustrations are V1 design content based on the prior brief, not a confirmed product catalogue. Supply current models, specifications and product photos before public release. The actual supplied Excedio PDF logo is used. No office address or brand phone is displayed.
 
-[项目概览](#项目概览) · [快速入口](#快速入口) · [使用与维护](#使用与维护)
+For updates edit dealers.js. Store phone as +60 digits. Store mobile numbers in mobiles. 01 numbers open WhatsApp with a prefilled enquiry; primary landlines open the phone dialler. Product category selection carries into the enquiry. Filters persist in the URL; more complete addresses sort first. Missing cities/states are blank. Maps links perform a search, not verified navigation. Latitude/longitude slots are reserved; nearby ranking and embedded map are not enabled until positions are verified.
 
-</div>
+Published as a client preview at https://excedio-preview.jazkng2012.chatgpt.site. noindex is intentional for this draft. Before release confirm public dealer list, phone types, brand/product copy, asset rights and intended hosting/domain, then change indexing settings. No form sends messages or stores visitors' location.
 
----
+Category images updated using built-in image_gen: unbranded photorealistic multimedia dashboard, surround-view parking display, windshield dashcam and component audio set. AI illustrations, not verified Excedio product photos. The original prompt file was outside the imported source and is not included here.
 
-## 项目概览
+## Repository and source
 
-| 产品目录 | 经销商查询 | 线索看板 |
-| :--- | :--- | :--- |
-| Aurora 与 Clif Designs | 按城市或邮编查找 | 询价、库存与分析展示 |
+Imported from ChatGPT Sites on 2026-11-23 (Asia/Kuala_Lumpur), replacing the retired Eagerise application at the owner's request. The repository name remains `jazkng/eagerise-dealer-app`; its current application is Excedio.
 
-> 当前项目说明注明使用静态数据；示例指标不代表实际经营业绩。
+Source Site: `appgprj_6aa2cea3ac748191a76481dc36d13648`, published version 1. Imported source commit: `cca11c7a2cb2cacbd6aa5f8b722948252442c73f`.
 
-## 快速入口
+The website HTML, CSS, JavaScript, dealer data and five images are imported without changes. The former React/Vite application and its obsolete dependencies have been removed. Existing Git history is retained; no legacy backup branch is created.
 
-[PROJECT_README.md](<PROJECT_README.md>) · [DEPLOYMENT_GUIDE.md](<DEPLOYMENT_GUIDE.md>)
+## Development
 
-## 使用与维护
+No dependencies or API keys are required. Use Node.js 22 or newer:
 
-详细产品结构、运行步骤与开发资料见 [PROJECT_README.md](PROJECT_README.md)。
+```sh
+npm run lint
+npm run build
+python3 -m http.server 8000 --directory dist
+```
 
-部署步骤见 [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)。
+Edit root source files; the build copies them into `dist/`. Commit source and generated output together. See [deployment guide](DEPLOYMENT_GUIDE.md), [module map](docs/MODULE_MAP.md) and [project memory](PROJECT_MEMORY.md).
 
----
-
-<div align="center">
-
-**EAGERISE** · 经销商平台
-
-[仓库首页](https://github.com/jazkng/eagerise-dealer-app) · [问题与需求](https://github.com/jazkng/eagerise-dealer-app/issues)
-
-</div>
+ChatGPT Sites and GitHub keep separate source repositories. This import does not set up automatic synchronization. Existing public-preview indexing settings and business behavior are preserved.
