@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
-import { getProducts } from '@/data/products.js'
+import { useCallback, useState } from 'react'
 import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Input } from '@/components/ui/input.jsx'
@@ -382,31 +381,13 @@ const translations = {
   }
 }
 
-const LANGUAGE_KEY = 'eagerise.lang'
-
-const readSavedLanguage = () => {
-  try {
-    const saved = localStorage.getItem(LANGUAGE_KEY)
-    if (saved === 'zh' || saved === 'en') return saved
-  } catch { /* 👑 storage can throw in private mode; fall back to the default */ }
-  return 'zh'
-}
-
-// Public URLs: /products, /products/<slug>, /dealers. Anything else opens the home page.
-const readRoute = () => {
-  const parts = window.location.pathname.split('/').filter(Boolean)
-  if (parts[0] === 'products') return { tab: 'products', slug: parts[1] ?? null }
-  if (parts[0] === 'dealers') return { tab: 'dealers', slug: null }
-  return { tab: 'home', slug: null }
-}
-
 function App() {
   const [systemMode, setSystemMode] = useState('customer') // customer, dealer, admin
-  const [activeTab, setActiveTab] = useState(() => readRoute().tab)
+  const [activeTab, setActiveTab] = useState('home')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [selectedProductSlug, setSelectedProductSlug] = useState(() => readRoute().slug)
+  const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedDealer, setSelectedDealer] = useState(null)
-  const [language, setLanguage] = useState(readSavedLanguage)
+  const [language, setLanguage] = useState('zh')
   const [showInquiryForm, setShowInquiryForm] = useState(false)
   const [inquirySuccess, setInquirySuccess] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -415,41 +396,191 @@ function App() {
   const t = translations[language]
 
   // Sample data
-  const products = getProducts(language, t)
-  // Derived from the slug so the open product follows language switches and the URL
-  const selectedProduct = products.find((p) => p.slug === selectedProductSlug) ?? null
-  const setSelectedProduct = (product) => setSelectedProductSlug(product?.slug ?? null)
-
-  useEffect(() => {
-    try { localStorage.setItem(LANGUAGE_KEY, language) } catch { /* 👑 private mode / blocked storage: keep working without memory */ }
-    document.documentElement.lang = language === 'zh' ? 'zh-Hans' : 'en'
-  }, [language])
-
-  // Keep the address bar in step with what the customer sees, so product pages can be shared and bookmarked
-  useEffect(() => {
-    const path = systemMode !== 'customer' ? '/'
-      : selectedProductSlug ? `/products/${selectedProductSlug}`
-      : activeTab === 'products' ? '/products'
-      : activeTab === 'dealers' ? '/dealers'
-      : '/'
-    if (window.location.pathname.replace(/\/+$/, '') !== path.replace(/\/+$/, '')) {
-      window.history.pushState(null, '', path)
+  const products = [
+    {
+      id: 1,
+      name: language === 'zh' ? 'Aurora 高级音响系统' : 'Aurora Premium Sound System',
+      brand: 'Aurora',
+      category: t.completeSystem,
+      price: 2499,
+      stock: 15,
+      image: '🔊',
+      rating: 4.8,
+      features: language === 'zh' 
+        ? ['高级音频', '12声道', '蓝牙5.0', 'DSP处理器'] 
+        : ['Premium Audio', '12-Channel', 'Bluetooth 5.0', 'DSP Processor'],
+      description: language === 'zh'
+        ? '采用最新技术的高端汽车音响系统，提供无与伦比的音质体验。12声道输出，支持蓝牙5.0无线连接。'
+        : 'High-end car audio system with cutting-edge technology, delivering unparalleled sound quality. 12-channel output with Bluetooth 5.0 wireless connectivity.'
+    },
+    {
+      id: 2,
+      name: language === 'zh' ? 'Clif Designs 专业低音炮' : 'Clif Designs Subwoofer Pro',
+      brand: 'Clif Designs',
+      category: t.subwoofer,
+      price: 899,
+      stock: 8,
+      image: '🎵',
+      rating: 4.9,
+      features: language === 'zh'
+        ? ['深沉低音', '1200W功率', '紧凑设计', '防震结构']
+        : ['Deep Bass', '1200W Power', 'Compact Design', 'Shock-proof'],
+      description: language === 'zh'
+        ? '专业级低音炮，1200W强劲功率，紧凑设计适合各种车型。防震结构确保稳定性能。'
+        : 'Professional-grade subwoofer with 1200W powerful output. Compact design fits various vehicle models.'
+    },
+    {
+      id: 3,
+      name: language === 'zh' ? 'Aurora 智能功放' : 'Aurora Smart Amplifier',
+      brand: 'Aurora',
+      category: t.amplifier,
+      price: 1299,
+      stock: 22,
+      image: '⚡',
+      rating: 4.7,
+      features: language === 'zh'
+        ? ['AI调音', '800W功率', 'DSP处理器', '智能散热']
+        : ['AI Tuning', '800W Power', 'DSP Processor', 'Smart Cooling'],
+      description: language === 'zh'
+        ? 'AI智能调音功放，自动优化音质。800W输出功率，内置DSP处理器。'
+        : 'AI-powered amplifier with automatic sound optimization. 800W output power, built-in DSP processor.'
+    },
+    {
+      id: 4,
+      name: language === 'zh' ? 'Clif Designs 扬声器套装' : 'Clif Designs Speaker Set',
+      brand: 'Clif Designs',
+      category: t.speakers,
+      price: 599,
+      stock: 3,
+      image: '🎶',
+      rating: 4.6,
+      features: language === 'zh'
+        ? ['水晶音质', '6.5英寸', '防水设计', '高灵敏度']
+        : ['Crystal Clear', '6.5 inch', 'Weather Resistant', 'High Sensitivity'],
+      description: language === 'zh'
+        ? '6.5英寸高品质扬声器套装，水晶般清澈音质。防水设计，高灵敏度。'
+        : '6.5-inch premium speaker set with crystal-clear sound quality. Weather-resistant design.'
+    },
+    {
+      id: 5,
+      name: language === 'zh' ? 'Aurora 旗舰音响系统' : 'Aurora Flagship Audio System',
+      brand: 'Aurora',
+      category: t.completeSystem,
+      price: 3999,
+      stock: 12,
+      image: '🎼',
+      rating: 4.9,
+      features: language === 'zh'
+        ? ['16声道', '无损音质', '主动降噪', '触控面板']
+        : ['16-Channel', 'Lossless Audio', 'Active Noise Cancellation', 'Touch Panel'],
+      description: language === 'zh'
+        ? '旗舰级音响系统，16声道环绕声，无损音质输出。主动降噪技术。'
+        : 'Flagship audio system with 16-channel surround sound and lossless audio output.'
+    },
+    {
+      id: 6,
+      name: language === 'zh' ? 'Clif Designs 双低音炮' : 'Clif Designs Dual Subwoofer',
+      brand: 'Clif Designs',
+      category: t.subwoofer,
+      price: 1599,
+      stock: 0,
+      image: '🔉',
+      rating: 4.8,
+      features: language === 'zh'
+        ? ['双驱动单元', '2000W功率', '低频增强', '智能控制']
+        : ['Dual Driver', '2000W Power', 'Bass Boost', 'Smart Control'],
+      description: language === 'zh'
+        ? '双驱动单元低音炮，2000W超强功率。低频增强技术，震撼音效。'
+        : 'Dual-driver subwoofer with 2000W ultra-powerful output. Bass boost technology.'
+    },
+    // EXCEDIO products: images from the supplier's Google Drive posters. Price, stock and
+    // detailed specs are not provided yet, so the detail page shows "资料待补充" for those.
+    {
+      id: 7,
+      name: language === 'zh' ? 'EXCEDIO T133 12.3 寸安卓车载多媒体主机' : 'EXCEDIO T133 12.3" Android Car Multimedia Player',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '安卓车机' : 'Android Player',
+      price: null,
+      stock: null,
+      image: '📺',
+      model: 'T133',
+      images: ['/products/excedio/excedio-t133.webp'],
+      features: language === 'zh'
+        ? ['12.3 寸宽屏', '安卓系统', '分屏显示', 'DSP 音效', 'CarPlay / Android Auto']
+        : ['12.3" Widescreen', 'Android System', 'Split Screen', 'DSP Audio', 'CarPlay / Android Auto'],
+      description: language === 'zh'
+        ? '12.3 寸宽屏安卓车载多媒体主机，支持分屏、DSP 音效，内置 CarPlay、Android Auto、YouTube、Waze 等应用。'
+        : '12.3" widescreen Android car multimedia player with split screen and DSP audio. Supports CarPlay, Android Auto, YouTube, Waze and more.'
+    },
+    {
+      id: 8,
+      name: language === 'zh' ? 'EXCEDIO Vision 系列 T9 安卓车载多媒体主机' : 'EXCEDIO Vision Series T9 Android Car Multimedia Player',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '安卓车机' : 'Android Player',
+      price: null,
+      stock: null,
+      image: '📺',
+      model: 'T9',
+      images: ['/products/excedio/excedio-t9-vision-series.webp'],
+      features: language === 'zh'
+        ? ['9 / 10 寸', '4GB RAM + 64GB 储存', '内置 4G', '支持 360° 摄像头']
+        : ['9" / 10"', '4GB RAM + 64GB Storage', 'Built-in 4G', '360° Camera Support'],
+      description: language === 'zh'
+        ? '9 寸 / 10 寸安卓车载多媒体主机，4GB RAM + 64GB 储存，内置 4G 网络，支持 360° 摄像头。'
+        : '9" / 10" Android car multimedia player with 4GB RAM + 64GB storage, built-in 4G connectivity and 360° camera support.'
+    },
+    {
+      id: 9,
+      name: language === 'zh' ? 'EXCEDIO Core 系列 T100 安卓车载多媒体主机' : 'EXCEDIO Core Series T100 Android Car Multimedia Player',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '安卓车机' : 'Android Player',
+      price: null,
+      stock: null,
+      image: '📺',
+      model: 'T100',
+      images: ['/products/excedio/excedio-t100-core-series.webp'],
+      features: language === 'zh'
+        ? ['9 / 10 寸', '2GB RAM + 64GB 储存', '安卓多媒体', '高性价比']
+        : ['9" / 10"', '2GB RAM + 64GB Storage', 'Android Multimedia', 'Budget-Friendly'],
+      description: language === 'zh'
+        ? '高性价比 9 寸 / 10 寸安卓车载多媒体主机，2GB RAM + 64GB 储存，满足日常导航、音乐、视频需求。'
+        : 'Budget-friendly 9" / 10" Android car multimedia player with 2GB RAM + 64GB storage for everyday navigation, music and video.'
+    },
+    {
+      id: 10,
+      name: language === 'zh' ? 'EXCEDIO 360° 全景摄像系统' : 'EXCEDIO 360° Camera System',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '摄像系统' : 'Camera System',
+      price: null,
+      stock: null,
+      image: '📷',
+      model: '360°',
+      images: ['/products/excedio/excedio-360-camera-system.webp'],
+      features: language === 'zh'
+        ? ['360° 环视', '多画面显示', '前 / 后 / 左右视角', '泊车辅助']
+        : ['360° Surround View', 'Multi-View Display', 'Front / Rear / Side Views', 'Parking Assistance'],
+      description: language === 'zh'
+        ? '360° 全景环视摄像系统，前、后、左右多角度画面，倒车与泊车更安心。'
+        : '360° surround-view camera system with front, rear and side views for safer, more confident parking.'
+    },
+    {
+      id: 11,
+      name: language === 'zh' ? 'EXCEDIO 6 路 360° 全景摄像系统' : 'EXCEDIO 6-Way 360° Panoramic Camera System',
+      brand: 'EXCEDIO',
+      category: language === 'zh' ? '摄像系统' : 'Camera System',
+      price: null,
+      stock: null,
+      image: '📷',
+      model: '6-Way 360°',
+      images: ['/products/excedio/excedio-6-way-360-camera-system.webp'],
+      features: language === 'zh'
+        ? ['6 路环视', '盲区 / 变道监控', '泊车辅助', 'Full HD 1080P']
+        : ['6-Way Surround View', 'Lane Watch Monitoring', 'Parking Assistance', 'Full HD 1080P'],
+      description: language === 'zh'
+        ? '6 路 360° 全景摄像系统：前、后、左右及两侧后视镜区域，含变道盲区监控，1080P 全高清画质。'
+        : '6-way 360° panoramic camera system covering front, rear, both sides and side-mirror areas, with lane watch monitoring in Full HD 1080P.'
     }
-    document.title = selectedProduct
-      ? `${selectedProduct.name} | Eagerise`
-      : language === 'zh' ? 'Eagerise 经销商平台 - 创新驱动' : 'Eagerise Dealer Portal - Connected by Innovation'
-  }, [systemMode, activeTab, selectedProductSlug, selectedProduct, language])
-
-  useEffect(() => {
-    const onPop = () => {
-      const route = readRoute()
-      setSystemMode('customer')
-      setActiveTab(route.tab)
-      setSelectedProductSlug(route.slug)
-    }
-    window.addEventListener('popstate', onPop)
-    return () => window.removeEventListener('popstate', onPop)
-  }, [])
+  ]
 
   const dealers = [
     { 
